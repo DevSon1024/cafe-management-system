@@ -25,7 +25,7 @@
                 </span>
             </td>
             <td>
-                <a href="/tables/edit/<?= $table['id'] ?>" class="btn btn-sm btn-warning">Edit</a>
+                <a href="/tables/<?= $table['id'] ?>/edit" class="btn btn-sm btn-warning">Edit</a>
                 <form action="/tables/<?= $table['id'] ?>" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this table?');">
                     <?= csrf_field() ?>
                     <input type="hidden" name="_method" value="DELETE">

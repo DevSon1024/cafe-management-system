@@ -25,8 +25,8 @@
                 <tr>
                     <td><?= esc($item['item_name']) ?></td>
                     <td><?= $item['quantity'] ?></td>
-                    <td>$<?= number_format($item['item_price'], 2) ?></td>
-                    <td>$<?= number_format($item['subtotal'], 2) ?></td>
+                    <td>₹<?= number_format($item['item_price'], 2) ?></td>
+                    <td>₹<?= number_format($item['subtotal'], 2) ?></td>
                 </tr>
                 <?php $sub_total += $item['subtotal']; ?>
                 <?php endforeach; ?>
@@ -34,15 +34,15 @@
             <tfoot>
                 <tr>
                     <th colspan="3" class="text-end">Sub-Total:</th>
-                    <th>$<?= number_format($sub_total, 2) ?></th>
+                    <th>₹<?= number_format($sub_total, 2) ?></th>
                 </tr>
                 <tr>
                     <th colspan="3" class="text-end">GST (5%):</th>
-                    <th>$<?= number_format($sub_total * 0.05, 2) ?></th>
+                    <th>₹<?= number_format($sub_total * 0.05, 2) ?></th>
                 </tr>
                 <tr>
                     <th colspan="3" class="text-end">Grand Total:</th>
-                    <th>$<?= number_format($order['total_amount'], 2) ?></th>
+                    <th>₹<?= number_format($order['total_amount'], 2) ?></th>
                 </tr>
             </tfoot>
         </table>

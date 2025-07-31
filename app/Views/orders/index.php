@@ -26,8 +26,10 @@
             <td><?= date('d-m-Y H:i', strtotime($order['created_at'])) ?></td>
             <td>
                 <a href="/orders/receipt/<?= $order['id'] ?>" class="btn btn-sm btn-info">View Bill</a>
+
                 <?php if ($order['status'] == 'Pending'): ?>
                     <form action="/orders/complete/<?= $order['id'] ?>" method="post" class="d-inline">
+                        <?= csrf_field() ?>
                         <button type="submit" class="btn btn-sm btn-success">Complete</button>
                     </form>
                 <?php endif; ?>
