@@ -1,6 +1,7 @@
 <?php namespace App\Controllers;
 
 use App\Models\CategoryModel;
+use App\Models\MenuModel;
 
 class CategoryController extends BaseController
 {
@@ -39,9 +40,16 @@ class CategoryController extends BaseController
 
     public function delete($id = null)
     {
-        $model = new CategoryModel();
-        // Now that the database handles cascading, this will work.
-        $model->delete($id);
-        return redirect()->to('/categories')->with('status', 'Category and its items were deleted successfully.');
+        // Now that you've "imported" the class, you can use it directly
+        $menuModel = new MenuModel();
+        $categoryModel = new CategoryModel();
+
+        // First, delete menu items associated with the category
+        $menuModel->where('category_id', $id)->delete();
+
+        // Now, delete the category itself
+        $categoryModel->delete($id);
+
+        return redirect()->to('/categories')->with('success', 'Category and its items were deleted successfully.');
     }
 }

@@ -26,8 +26,9 @@
                 <td><?= esc($item['category_name']) ?></td>
                 <td>$<?= number_format($item['price'], 2) ?></td>
                 <td>
-                    <a href="/menu/edit/<?= $item['id'] ?>" class="btn btn-sm btn-warning">Edit</a>
-                    <form action="/menu/delete/<?= $item['id'] ?>" method="post" class="d-inline" onsubmit="return confirm('Are you sure?');">
+                    <a href="/menu/<?= $item['id'] ?>" class="btn btn-sm btn-warning">Edit</a>
+
+                    <form action="/menu/<?= $item['id'] ?>" method="post" class="d-inline" onsubmit="return confirm('This will delete the category AND all associated menu items. Are you sure?');">
                         <?= csrf_field() ?>
                         <input type="hidden" name="_method" value="DELETE">
                         <button type="submit" class="btn btn-sm btn-danger">Delete</button>

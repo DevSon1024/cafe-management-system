@@ -19,7 +19,3 @@ $routes->get('orders/new', 'OrderController::new');
 $routes->post('orders/create', 'OrderController::create');
 $routes->get('orders/receipt/(:num)', 'OrderController::receipt/$1');
 $routes->post('orders/complete/(:num)', 'OrderController::complete/$1');
-
-$routes->get('/categories/edit/(:num)', 'Categories::edit/$1');
-$routes->put('/categories/update/(:num)', 'Categories::update/$1'); // CHANGE THIS LINE
-$routes->delete('/categories/delete/(:num)', 'Categories::delete/$1');
