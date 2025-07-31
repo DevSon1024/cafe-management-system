@@ -24,8 +24,7 @@
             <td><?= esc($member['shift']) ?></td>
             <td>
                 <a href="/staff/edit/<?= $member['id'] ?>" class="btn btn-sm btn-warning">Edit</a>
-                // Find this form:
-                <form action="/staff/<?= $user['id'] ?>" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this staff member?');">
+                <form action="/staff/<?= $member['id'] ?>" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this staff member?');">
                     <?= csrf_field() ?>
                     <input type="hidden" name="_method" value="DELETE">
                     <button type="submit" class="btn btn-sm btn-danger">Delete</button>
