@@ -1,7 +1,7 @@
 <?= $this->extend('layouts/main') ?>
 <?= $this->section('content') ?>
 <h2>Edit Staff Member</h2>
-<form action="/staff/update/<?= $staff_member['id'] ?>" method="post">
+<form action="/staff/<?= $staff_member['id'] ?>" method="post">
     <?= csrf_field() ?>
     <input type="hidden" name="_method" value="PUT">
     <div class="mb-3">

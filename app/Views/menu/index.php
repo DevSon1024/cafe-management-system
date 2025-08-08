@@ -24,7 +24,7 @@
                 <td><img src="/uploads/<?= esc($item['image']) ?>" width="80" style="object-fit: cover; height: 60px;"></td>
                 <td><?= esc($item['name']) ?></td>
                 <td><?= esc($item['category_name']) ?></td>
-                <td>$<?= number_format($item['price'], 2) ?></td>
+                <td>₹<?= number_format($item['price'], 2) ?></td>
                 <td>
                    <a href="/menu/<?= $item['id'] ?>/edit" class="btn btn-sm btn-warning">Edit</a>
 

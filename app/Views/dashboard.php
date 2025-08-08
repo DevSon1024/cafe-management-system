@@ -7,7 +7,7 @@
             <div class="card text-white bg-success">
                 <div class="card-body">
                     <h5 class="card-title">Today's Sales</h5>
-                    <p class="card-text fs-4">$<?= number_format($todays_sales, 2) ?></p>
+                    <p class="card-text fs-4">₹<?= number_format($todays_sales, 2) ?></p>
                 </div>
             </div>
         </div>

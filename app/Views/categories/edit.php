@@ -1,7 +1,7 @@
 <?= $this->extend('layouts/main') ?>
 <?= $this->section('content') ?>
 <h2>Edit Category</h2>
-<form action="/categories/update/<?= $category['id'] ?>" method="post">
+<form action="/categories/<?= $category['id'] ?>" method="post">
     <?= csrf_field() ?>
     <input type="hidden" name="_method" value="PUT">
     <div class="mb-3">

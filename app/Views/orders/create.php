@@ -18,7 +18,7 @@
                 </select>
             </div>
             <hr>
-            <h4>Grand Total: $<span id="grand-total">0.00</span></h4>
+            <h4>Grand Total: ₹<span id="grand-total">0.00</span></h4>
             <input type="hidden" name="grand_total" id="grand-total-input" value="0">
             <button type="submit" class="btn btn-success w-100">Place Order</button>
         </div>
@@ -32,7 +32,7 @@
                         <img src="/uploads/<?= $item['image'] ?>" class="card-img-top" style="height: 150px; object-fit: cover;">
                         <div class="card-body">
                             <h6 class="card-title"><?= esc($item['name']) ?></h6>
-                            <p class="card-text">$<?= number_format($item['price'], 2) ?></p>
+                            <p class="card-text">₹<?= number_format($item['price'], 2) ?></p>
                             <button type="button" class="btn btn-sm btn-primary add-item-btn" 
                                     data-id="<?= $item['id'] ?>" 
                                     data-name="<?= esc($item['name']) ?>"

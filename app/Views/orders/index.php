@@ -21,7 +21,7 @@
         <tr>
             <td><?= $order['id'] ?></td>
             <td><?= esc($order['table_name']) ?></td>
-            <td>$<?= number_format($order['total_amount'], 2) ?></td>
+            <td>₹<?= number_format($order['total_amount'], 2) ?></td>
             <td><span class="badge bg-<?= $order['status'] == 'Pending' ? 'warning' : 'success' ?>"><?= $order['status'] ?></span></td>
             <td><?= date('d-m-Y H:i', strtotime($order['created_at'])) ?></td>
             <td>
