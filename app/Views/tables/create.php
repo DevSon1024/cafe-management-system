@@ -1,7 +1,7 @@
 <?= $this->extend('layouts/main') ?>
 <?= $this->section('content') ?>
 <h2>Add New Table</h2>
-<form action="/tables" method="post">
+<form action="/admin/tables" method="post">
     <?= csrf_field() ?>
     <div class="mb-3">
         <label for="name" class="form-label">Table Name / Number</label>

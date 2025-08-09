@@ -1,7 +1,7 @@
 <?= $this->extend('layouts/main') ?>
 <?= $this->section('content') ?>
 <h2>Add New Menu Item</h2>
-<form action="/menu" method="post" enctype="multipart/form-data">
+<form action="/admin/menu" method="post" enctype="multipart/form-data">
     <?= csrf_field() ?>
     <div class="mb-3">
         <label for="name" class="form-label">Item Name</label>

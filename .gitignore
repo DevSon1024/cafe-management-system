@@ -125,4 +125,4 @@ _modules/*
 /results/
 /phpunit*.xml
 
-reset_the_table.txt
+reset_the_table.md

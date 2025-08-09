@@ -1,7 +1,7 @@
 <?= $this->extend('layouts/main') ?>
 <?= $this->section('content') ?>
 <h2>Staff Management</h2>
-<a href="/staff/new" class="btn btn-primary mb-3">Add New Staff</a>
+<a href="/admin/staff/new" class="btn btn-primary mb-3">Add New Staff</a>
 <?php if(session()->get('status')): ?>
     <div class="alert alert-success"><?= session()->get('status') ?></div>
 <?php endif; ?>

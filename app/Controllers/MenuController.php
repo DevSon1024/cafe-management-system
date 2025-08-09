@@ -47,7 +47,7 @@ class MenuController extends BaseController
         ];
 
         $model->save($data);
-        return redirect()->to('/menu')->with('status', 'Menu Item Added Successfully');
+        return redirect()->to('/admin/menu')->with('status', 'Menu Item Added Successfully');
     }
 
     // Show form to edit an item
@@ -78,7 +78,7 @@ class MenuController extends BaseController
         }
 
         $model->update($id, $data);
-        return redirect()->to('/menu')->with('status', 'Menu Item Updated Successfully');
+        return redirect()->to('/admin/menu')->with('status', 'Menu Item Updated Successfully');
     }
 
     // Delete an item
@@ -87,6 +87,6 @@ class MenuController extends BaseController
         $model = new MenuModel();
         // Deleting a menu item has no children, so this is safe.
         $model->delete($id);
-        return redirect()->to('/menu')->with('status', 'Menu Item Deleted Successfully');
+        return redirect()->to('/admin/menu')->with('status', 'Menu Item Deleted Successfully');
     }
 }

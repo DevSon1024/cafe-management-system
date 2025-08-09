@@ -35,14 +35,42 @@
             </div>
         </div>
     </div>
+    
 
     <div class="row mt-4">
         <div class="col-md-12">
             <h4>Quick Actions</h4>
             <a href="/orders/new" class="btn btn-primary">New Order</a>
+            <a href="/admin/sales" class="btn btn-success">View Sales History</a>
             <a href="/admin/menu/new" class="btn btn-secondary">Add Menu Item</a>
             <a href="/admin/tables" class="btn btn-info">Manage Tables</a>
             <a href="/admin/staff" class="btn btn-dark">Manage Staff</a>
+        </div>
+    </div>
+
+     <div class="row mt-4">
+        <div class="col-md-12">
+            <h4>Sales History (Last 7 Days)</h4>
+            <div class="card">
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Total Sales</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach($daily_sales as $sale): ?>
+                            <tr>
+                                <td><?= date('d M, Y', strtotime($sale['sale_date'])) ?></td>
+                                <td>₹<?= number_format($sale['total_sales'], 2) ?></td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 <?= $this->endSection() ?>

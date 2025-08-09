@@ -1,7 +1,7 @@
 <?= $this->extend('layouts/main') ?>
 <?= $this->section('content') ?>
 <h2>Add New Staff Member</h2>
-<form action="/staff" method="post">
+<form action="/admin/staff" method="post">
     <?= csrf_field() ?>
     <div class="mb-3">
         <label for="name" class="form-label">Name</label>

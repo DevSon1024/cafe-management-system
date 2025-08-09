@@ -25,7 +25,7 @@ class StaffController extends BaseController
             'shift' => $this->request->getPost('shift'),
         ];
         $model->save($data);
-        return redirect()->to('/staff')->with('status', 'Staff Member Added Successfully');
+        return redirect()->to('/admin/staff')->with('status', 'Staff Member Added Successfully');
     }
 
     public function edit($id = null)
@@ -44,13 +44,13 @@ class StaffController extends BaseController
             'shift' => $this->request->getPost('shift'),
         ];
         $model->update($id, $data);
-        return redirect()->to('/staff')->with('status', 'Staff Member Updated Successfully');
+        return redirect()->to('/admin/staff')->with('status', 'Staff Member Updated Successfully');
     }
 
     public function delete($id = null)
     {
         $model = new StaffModel();
         $model->delete($id);
-        return redirect()->to('/staff')->with('status', 'Staff Member Deleted Successfully');
+        return redirect()->to('/admin/staff')->with('status', 'Staff Member Deleted Successfully');
     }
 }

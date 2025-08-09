@@ -12,14 +12,21 @@ class Home extends BaseController
         $menuModel = new MenuModel();
         $tableModel = new TableModel();
 
-        $data = [
-            'pending_orders' => $orderModel->where('status', 'Pending')->countAllResults(),
+        $dailySales = $orderModel->select('DATE(created_at) as sale_date, SUM(total_amount) as total_sales')
+                                 ->where('status', 'Completed')
+                                 ->groupBy('DATE(created_at)')
+                                 ->orderBy('sale_date', 'DESC')
+                                 ->findAll(7); // Get the last 7 days of sales
+
+         $data = [
+            'pending_orders'   => $orderModel->where('status', 'Pending')->countAllResults(),
             'total_menu_items' => $menuModel->countAllResults(),
             'available_tables' => $tableModel->where('status', 'Available')->countAllResults(),
-            'todays_sales' => $orderModel->selectSum('total_amount')
-                                          ->where('status', 'Completed')
-                                          ->where('DATE(created_at)', date('Y-m-d'))
-                                          ->first()['total_amount'] ?? 0
+            'todays_sales'     => $orderModel->selectSum('total_amount')
+                                              ->where('status', 'Completed')
+                                              ->where('DATE(created_at)', date('Y-m-d'))
+                                              ->first()['total_amount'] ?? 0,
+            'daily_sales'      => $dailySales
         ];
 
         return view('dashboard', $data);

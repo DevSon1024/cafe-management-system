@@ -25,7 +25,7 @@ class TableController extends BaseController
             'status' => $this->request->getPost('status'),
         ];
         $model->save($data);
-        return redirect()->to('/tables')->with('status', 'Table Added Successfully');
+        return redirect()->to('/admin/tables')->with('status', 'Table Added Successfully');
     }
 
     public function edit($id = null)
@@ -43,7 +43,7 @@ class TableController extends BaseController
             'status' => $this->request->getPost('status'),
         ];
         $model->update($id, $data);
-        return redirect()->to('/tables')->with('status', 'Table Updated Successfully');
+        return redirect()->to('/admin/tables')->with('status', 'Table Updated Successfully');
     }
 
     public function delete($id = null)
@@ -54,12 +54,12 @@ class TableController extends BaseController
         // It's still wise to prevent deleting a table with PENDING orders.
         $pending_orders = $orderModel->where('table_id', $id)->where('status', 'Pending')->countAllResults();
         if ($pending_orders > 0) {
-            return redirect()->to('/tables')->with('error', 'Cannot delete this table because it has active, pending orders.');
+            return redirect()->to('/admin/tables')->with('error', 'Cannot delete this table because it has active, pending orders.');
         }
 
         // If no pending orders, delete the table.
         // Completed orders for this table will remain in the system for reporting.
         $tableModel->delete($id);
-        return redirect()->to('/tables')->with('status', 'Table Deleted Successfully');
+        return redirect()->to('/admin/tables')->with('status', 'Table Deleted Successfully');
     }
 }

@@ -21,7 +21,7 @@ class CategoryController extends BaseController
     {
         $model = new CategoryModel();
         $model->save(['name' => $this->request->getPost('name')]);
-        return redirect()->to('/categories')->with('status', 'Category Added Successfully');
+        return redirect()->to('/admin/categories')->with('status', 'Category Added Successfully');
     }
 
     public function edit($id = null)
@@ -35,7 +35,7 @@ class CategoryController extends BaseController
     {
         $model = new CategoryModel();
         $model->update($id, ['name' => $this->request->getPost('name')]);
-        return redirect()->to('/categories')->with('status', 'Category Updated Successfully');
+        return redirect()->to('/admin/categories')->with('status', 'Category Updated Successfully');
     }
 
     public function delete($id = null)

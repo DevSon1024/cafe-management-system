@@ -1,7 +1,7 @@
 <?= $this->extend('layouts/main') ?>
 <?= $this->section('content') ?>
 <h2>Menu Categories</h2>
-<a href="/categories/new" class="btn btn-primary mb-3">Add New Category</a>
+<a href="/admin/categories/new" class="btn btn-primary mb-3">Add New Category</a>
 <?php if(session()->get('status')): ?>
     <div class="alert alert-success"><?= session()->get('status') ?></div>
 <?php endif; ?>

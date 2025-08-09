@@ -1,6 +1,7 @@
 <?php namespace App\Controllers;
 
 use App\Models\UserModel;
+use App\Models\OrderModel;
 
 class UserController extends BaseController
 {
@@ -51,26 +52,55 @@ class UserController extends BaseController
         return view('auth/register');
     }
 
+    public function orders()
+    {
+        $orderModel = new OrderModel();
+        $userId = session()->get('user_id');
+
+        $data['orders'] = $orderModel->getOrdersByUserId($userId);
+
+        // Logic for the time-sensitive message
+        $hour = date('H');
+        if ($hour < 12) {
+            $data['greeting_message'] = "Start your tasty day with our delicious breakfast!";
+        } elseif ($hour < 17) {
+            $data['greeting_message'] = "Feeling hungry? Our lunch menu has just what you need!";
+        } else {
+            $data['greeting_message'] = "End your day on a high note with a wonderful dinner.";
+        }
+
+        return view('user/orders', $data);
+    }
+
     public function store()
     {
         $model = new UserModel();
 
+        // Validation Rules
+        $rules = [
+            'name'             => 'required|min_length[3]|max_length[255]',
+            'email'            => 'required|valid_email|is_unique[users.email]',
+            'password'         => 'required|min_length[8]',
+            'password_confirm' => 'matches[password]',
+        ];
+
+        if (! $this->validate($rules)) {
+            // Pass validation errors to the view
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
+        // If validation passes, save the user
         $data = [
             'name'     => $this->request->getVar('name'),
             'email'    => $this->request->getVar('email'),
             'password' => password_hash($this->request->getVar('password'), PASSWORD_DEFAULT),
-            'role'     => 'user' // Default role for new registrations
+            'role'     => 'user'
         ];
-
-        // Basic validation
-        if (empty($data['name']) || empty($data['email']) || empty($this->request->getVar('password'))) {
-            return redirect()->back()->withInput()->with('error', 'All fields are required.');
-        }
 
         if ($model->save($data)) {
             return redirect()->to('/login')->with('success', 'Registration successful. Please login.');
         } else {
-            return redirect()->back()->withInput()->with('error', 'Registration failed.');
+            return redirect()->back()->withInput()->with('error', 'Registration failed. Please try again.');
         }
     }
 

@@ -35,6 +35,7 @@ class OrderController extends BaseController
 
             $orderData = [
                 'table_id'     => $this->request->getPost('table_id'),
+                'user_id'      => session()->get('user_id'), // Get user ID from session
                 'total_amount' => $this->request->getPost('grand_total'),
                 'status'       => 'Pending'
             ];
@@ -59,8 +60,11 @@ class OrderController extends BaseController
             $tableModel->update($this->request->getPost('table_id'), ['status' => 'Occupied']);
 
             $db->transComplete();
+            
+            // Redirect based on user role
+            $redirectURL = (session()->get('role') === 'admin') ? '/admin/orders' : '/user/profile';
 
-            return redirect()->to('/orders')->with('status', 'Order Placed Successfully');
+            return redirect()->to($redirectURL)->with('status', 'Order Placed Successfully');
 
         } catch (\Exception $e) {
             $db->transRollback();

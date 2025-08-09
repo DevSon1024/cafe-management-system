@@ -1,7 +1,7 @@
 <?= $this->extend('layouts/main') ?>
 <?= $this->section('content') ?>
 <h2>Table Management</h2>
-<a href="/tables/new" class="btn btn-primary mb-3">Add New Table</a>
+<a href="/admin/tables/new" class="btn btn-primary mb-3">Add New Table</a>
 <?php if(session()->get('status')): ?>
     <div class="alert alert-success"><?= session()->get('status') ?></div>
 <?php endif; ?>
