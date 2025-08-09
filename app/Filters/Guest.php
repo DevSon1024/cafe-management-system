@@ -10,7 +10,7 @@ class Guest implements FilterInterface
     {
         if (session()->get('isLoggedIn')) {
             if (session()->get('role') === 'admin') {
-                return redirect()->to('/dashboard');
+                return redirect()->to('/admin/dashboard'); // Corrected redirect
             }
             return redirect()->to('/user/dashboard');
         }

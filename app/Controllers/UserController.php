@@ -41,12 +41,11 @@ class UserController extends BaseController
         $session->set($ses_data);
 
         if ($user['role'] === 'admin') {
-            return redirect()->to('/');
+            return redirect()->to('/admin/dashboard'); // Corrected redirect
         }
         
         return redirect()->to('/user/dashboard');
     }
-
     public function register()
     {
         return view('auth/register');

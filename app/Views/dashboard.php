@@ -2,7 +2,6 @@
 <?= $this->section('content') ?>
     <h1 class="mb-4">Admin Dashboard</h1>
     <div class="row">
-        <!-- Today's Sales Card -->
         <div class="col-md-3 mb-4">
             <div class="card text-white bg-success">
                 <div class="card-body">
@@ -11,7 +10,6 @@
                 </div>
             </div>
         </div>
-        <!-- Pending Orders Card -->
         <div class="col-md-3 mb-4">
             <div class="card text-white bg-warning">
                 <div class="card-body">
@@ -20,7 +18,6 @@
                 </div>
             </div>
         </div>
-        <!-- Menu Items Card -->
         <div class="col-md-3 mb-4">
             <div class="card text-white bg-info">
                 <div class="card-body">
@@ -29,7 +26,6 @@
                 </div>
             </div>
         </div>
-        <!-- Available Tables Card -->
         <div class="col-md-3 mb-4">
             <div class="card text-white bg-secondary">
                 <div class="card-body">
@@ -44,8 +40,9 @@
         <div class="col-md-12">
             <h4>Quick Actions</h4>
             <a href="/orders/new" class="btn btn-primary">New Order</a>
-            <a href="/menu/new" class="btn btn-secondary">Add Menu Item</a>
-            <a href="/tables" class="btn btn-info">Manage Tables</a>
+            <a href="/admin/menu/new" class="btn btn-secondary">Add Menu Item</a>
+            <a href="/admin/tables" class="btn btn-info">Manage Tables</a>
+            <a href="/admin/staff" class="btn btn-dark">Manage Staff</a>
         </div>
     </div>
 <?= $this->endSection() ?>
