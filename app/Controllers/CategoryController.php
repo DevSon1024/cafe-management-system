@@ -50,6 +50,6 @@ class CategoryController extends BaseController
         // Now, delete the category itself
         $categoryModel->delete($id);
 
-        return redirect()->to('/categories')->with('success', 'Category and its items were deleted successfully.');
+        return redirect()->to('/admin/categories')->with('success', 'Category and its items were deleted successfully.');
     }
 }

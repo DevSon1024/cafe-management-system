@@ -1,7 +1,7 @@
 <?= $this->extend('layouts/main') ?>
 <?= $this->section('content') ?>
 <h2>Edit Table</h2>
-<form action="/tables/<?= $table['id'] ?>" method="post">
+<form action="/admin/tables/<?= $table['id'] ?>" method="post">
     <?= csrf_field() ?>
     <input type="hidden" name="_method" value="PUT">
     <div class="mb-3">

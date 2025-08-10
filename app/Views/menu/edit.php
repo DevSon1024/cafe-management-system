@@ -1,7 +1,7 @@
 <?= $this->extend('layouts/main') ?>
 <?= $this->section('content') ?>
 <h2>Edit Menu Item</h2>
-<form action="/menu/<?= $menu['id'] ?>" method="post" enctype="multipart/form-data">
+<form action="/admin/menu/<?= $menu['id'] ?>" method="post" enctype="multipart/form-data">
     <?= csrf_field() ?>
     <input type="hidden" name="_method" value="PUT">
     <div class="mb-3">
