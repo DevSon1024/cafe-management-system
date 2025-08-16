@@ -4,6 +4,7 @@ use App\Models\OrderModel;
 use App\Models\OrderItemModel;
 use App\Models\TableModel;
 use App\Models\MenuModel;
+use App\Models\CategoryModel;
 
 class OrderController extends BaseController
 {
@@ -18,8 +19,19 @@ class OrderController extends BaseController
     {
         $tableModel = new TableModel();
         $menuModel = new MenuModel();
+        $categoryModel = new CategoryModel();
+        
         $data['tables'] = $tableModel->where('status', 'Available')->findAll();
-        $data['menu_items'] = $menuModel->findAll();
+        $data['categories'] = $categoryModel->findAll();
+        $data['menu_items'] = $menuModel->getMenuItemsWithCategories();
+        
+        // Group menu items by category for easier display
+        $data['menu_by_category'] = [];
+        foreach($data['menu_items'] as $item) {
+            $categoryId = $item['category_id'] ?? 'uncategorized';
+            $data['menu_by_category'][$categoryId][] = $item;
+        }
+        
         return view('orders/create', $data);
     }
 

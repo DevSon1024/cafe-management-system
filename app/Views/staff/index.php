@@ -23,12 +23,18 @@
             <td><?= esc($member['role']) ?></td>
             <td><?= esc($member['shift']) ?></td>
             <td>
-                <a href="/admin/staff/<?= $member['id'] ?>/edit" class="btn btn-sm btn-warning">Edit</a>
-                <form action="/admin/staff/<?= $member['id'] ?>" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this staff member?');">
-                    <?= csrf_field() ?>
-                    <input type="hidden" name="_method" value="DELETE">
-                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                </form>
+                <div class="action-buttons">
+                    <a href="/admin/staff/<?= $member['id'] ?>/edit" class="btn btn-edit">
+                        <i class="bi bi-pencil-square"></i> Edit
+                    </a>
+                    <form action="/admin/staff/<?= $member['id'] ?>" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this staff member?');">
+                        <?= csrf_field() ?>
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button type="submit" class="btn btn-delete">
+                            <i class="bi bi-trash"></i> Delete
+                        </button>
+                    </form>
+                </div>
             </td>
         </tr>
         <?php endforeach; ?>
