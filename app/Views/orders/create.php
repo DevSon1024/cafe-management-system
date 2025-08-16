@@ -18,8 +18,6 @@
                 </select>
             </div>
             <hr>
-            <h4>Grand Total: ₹<span id="grand-total">0.00</span></h4>
-            <input type="hidden" name="grand_total" id="grand-total-input" value="0">
             <button type="submit" class="btn btn-success w-100">Place Order</button>
         </div>
 
@@ -58,15 +56,23 @@
             </tr>
         </thead>
         <tbody id="order-items">
-            </tbody>
+        </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="3" class="text-end">Grand Total:</th>
+                <th id="grand-total">₹0.00</th>
+                <th></th>
+            </tr>
+        </tfoot>
     </table>
+    <input type="hidden" name="grand_total" id="grand-total-input" value="0">
 </form>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const addItemButtons = document.querySelectorAll('.add-item-btn');
     const orderItemsTbody = document.getElementById('order-items');
-    const grandTotalSpan = document.getElementById('grand-total');
+    const grandTotalTh = document.getElementById('grand-total');
     const grandTotalInput = document.getElementById('grand-total-input');
 
     addItemButtons.forEach(button => {
@@ -131,7 +137,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('#order-items .subtotal').forEach(subtotalEl => {
             total += parseFloat(subtotalEl.textContent);
         });
-        grandTotalSpan.textContent = total.toFixed(2);
+        grandTotalTh.textContent = '₹' + total.toFixed(2);
         grandTotalInput.value = total.toFixed(2);
     }
 });

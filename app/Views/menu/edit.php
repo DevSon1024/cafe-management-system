@@ -1,7 +1,7 @@
 <?= $this->extend('layouts/main') ?>
 <?= $this->section('content') ?>
 <h2>Edit Menu Item</h2>
-<form action="/admin/menu/<?= $menu['id'] ?>" method="post" enctype="multipart/form-data">
+<form action="/admin/menu/<?= $item['id'] ?>" method="post" enctype="multipart/form-data">
     <?= csrf_field() ?>
     <input type="hidden" name="_method" value="PUT">
     <div class="mb-3">
@@ -12,6 +12,7 @@
         <label for="price" class="form-label">Price</label>
         <input type="number" step="0.01" class="form-control" name="price" value="<?= esc($item['price']) ?>" required>
     </div>
+    <div class="mb-3">
         <label for="category_id" class="form-label">Category</label>
         <!-- THIS IS THE UPDATED PART -->
         <select name="category_id" class="form-select" required>
