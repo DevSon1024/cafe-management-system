@@ -1,6 +1,35 @@
 <?= $this->extend('layouts/main') ?>
 <?= $this->section('content') ?>
-<div class="card">
+
+<style>
+    /* These styles only apply when printing */
+    @media print {
+        /* Hide everything that's not the receipt */
+        body * {
+            visibility: hidden;
+        }
+
+        /* Make the receipt card and its contents visible */
+        .receipt-card, .receipt-card * {
+            visibility: visible;
+        }
+
+        /* Position the receipt at the top of the page */
+        .receipt-card {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+        }
+        
+        /* Hide the action buttons and the debug toolbar */
+        .no-print, #debug-icon {
+            display: none;
+        }
+    }
+</style>
+
+<div class="card receipt-card">
     <div class="card-header text-center">
         <h3>The Code Cafe</h3>
         <p>Receipt / Bill</p>
@@ -50,8 +79,13 @@
         <p class="text-center">Thank you for your visit!</p>
     </div>
 </div>
-<div class="text-center mt-3">
-    <a href="/orders" class="btn btn-secondary">Back to Orders</a>
+
+<div class="text-center mt-3 no-print">
+    <?php
+    $back_url = (session()->get('role') === 'admin') ? '/admin/orders' : '/user/orders';
+    ?>
+    <a href="<?= $back_url ?>" class="btn btn-secondary">Back to Orders</a>
     <button onclick="window.print()" class="btn btn-primary">Print Receipt</button>
 </div>
+
 <?= $this->endSection() ?>

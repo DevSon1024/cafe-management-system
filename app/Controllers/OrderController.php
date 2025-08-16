@@ -84,6 +84,11 @@ class OrderController extends BaseController
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
 
+        // SECURITY CHECK: Ensure a regular user can only see their own order
+        if (session()->get('role') === 'user' && session()->get('user_id') != $data['order']['user_id']) {
+            return redirect()->to('/user/orders')->with('error', 'You are not authorized to view this order.');
+        }
+
         return view('orders/receipt', $data);
     }
     
@@ -92,15 +97,13 @@ class OrderController extends BaseController
         $orderModel = new OrderModel();
         $tableModel = new TableModel();
 
-        // Find the order to get the table_id
         $order = $orderModel->find($id);
         if ($order) {
-            // Update table status to Available
             $tableModel->update($order['table_id'], ['status' => 'Available']);
-            // Update order status to Completed
             $orderModel->update($id, ['status' => 'Completed']);
         }
         
-        return redirect()->to('/orders')->with('status', 'Order marked as completed and table is now available.');
+        // Corrected Redirect Path
+        return redirect()->to('/admin/orders')->with('status', 'Order marked as completed and table is now available.');
     }
 }

@@ -50,6 +50,7 @@ $routes->group('user', ['filter' => 'auth'], function($routes) {
     $routes->get('profile/edit', 'ProfileController::edit');
     $routes->post('profile/update', 'ProfileController::update');
     // You can add user-specific order history routes here
+    $routes->get('orders/receipt/(:num)', 'OrderController::receipt/$1'); // for user-specific reciepts
 });
 
 // Routes for placing a new order, accessible by any logged-in user

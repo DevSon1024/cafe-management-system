@@ -30,7 +30,7 @@
                                 </span>
                             </td>
                             <td>
-                                <a href="/orders/receipt/<?= $order['id'] ?>" class="btn btn-sm btn-info">View Bill</a>
+                                <a href="/user/orders/receipt/<?= $order['id'] ?>" class="btn btn-sm btn-info">View Bill</a>
                             </td>
                         </tr>
                         <?php endforeach; ?>
