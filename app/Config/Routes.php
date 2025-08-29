@@ -44,3 +44,24 @@ $routes->group('orders', ['filter' => 'auth'], function($routes) {
     $routes->get('new', 'OrderController::new');
     $routes->post('create', 'OrderController::create');
 });
+
+// --- GUEST ORDERING ROUTES ---
+$routes->get('order/new', 'OrderController::new_guest_order');
+$routes->post('order/create', 'OrderController::create_guest_order');
+$routes->post('order/process_type', 'OrderController::process_order_type');
+$routes->post('order/process_payment', 'OrderController::process_payment');
+$routes->get('order/receipt/(:num)', 'OrderController::receipt/$1');
+
+// --- CHEF ROUTES ---
+$routes->group('chef', ['filter' => 'chef'], function($routes) {
+    $routes->get('dashboard', 'ChefController::index');
+    $routes->post('order/update_status/(:num)', 'ChefController::update_status/$1');
+});
+
+// --- CASHIER ROUTES ---
+$routes->group('cashier', ['filter' => 'cashier'], function($routes) {
+    $routes->get('dashboard', 'CashierController::index');
+    $routes->get('sales', 'SalesController::index');
+    $routes->get('orders/new', 'OrderController::new');
+    $routes->get('orders/receipt/(:num)', 'OrderController::receipt/$1');
+});

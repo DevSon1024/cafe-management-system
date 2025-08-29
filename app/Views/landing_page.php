@@ -59,11 +59,11 @@
         <div class="col-12">
             <div class="card shadow-sm">
                 <div class="card-header bg-success text-white">
-                    <h2 class="h4 mb-0">Book a Table</h2>
+                    <h2 class="h4 mb-0">Ready to Order?</h2>
                 </div>
                 <div class="card-body text-center">
-                    <p>Want to ensure you have a spot? Book a table in advance!</p>
-                    <a href="/login" class="btn btn-success btn-lg">Book Now</a>
+                    <p>Click the button below to start your order!</p>
+                    <a href="/order/new" class="btn btn-success btn-lg">Order Now</a>
                 </div>
             </div>
         </div>

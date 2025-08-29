@@ -29,8 +29,9 @@ class UserController extends BaseController
             return redirect()->back()->withInput()->with('error', 'Invalid email or password.');
         }
 
-        // ADD THIS CHECK: Only allow admin and staff to log in
-        if ($user['role'] !== 'admin' && $user['role'] !== 'staff') {
+        // UPDATED ROLE CHECK
+        $allowed_roles = ['admin', 'chef', 'cashier'];
+        if (!in_array($user['role'], $allowed_roles)) {
             return redirect()->back()->withInput()->with('error', 'Access denied.');
         }
 
@@ -47,8 +48,16 @@ class UserController extends BaseController
         ];
         $session->set($ses_data);
 
-        // SIMPLIFIED REDIRECT
-        return redirect()->to('/admin/dashboard');
+        // CORRECTED REDIRECT LOGIC
+        if ($user['role'] === 'admin') {
+            return redirect()->to('/admin/dashboard');
+        } elseif ($user['role'] === 'chef') {
+            return redirect()->to('/chef/dashboard');
+        } elseif ($user['role'] === 'cashier') {
+            return redirect()->to('/cashier/dashboard');
+        }
+
+        return redirect()->to('/login');
     }
 
     public function logout()

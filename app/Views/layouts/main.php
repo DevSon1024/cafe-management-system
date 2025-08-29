@@ -19,14 +19,20 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-                    <?php if (session()->get('isLoggedIn') && session()->get('role') === 'admin'): ?>
-                        <li class="nav-item"><a class="nav-link" href="/admin/dashboard">Dashboard</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/admin/sales">Sales History</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/admin/menu">Menu</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/admin/categories">Categories</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/admin/orders">Orders</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/admin/tables">Tables</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/admin/staff">Staff</a></li>
+                    <?php if (session()->get('isLoggedIn')): ?>
+                        <?php if (session()->get('role') === 'admin'): ?>
+                            <li class="nav-item"><a class="nav-link" href="/admin/dashboard">Dashboard</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/admin/sales">Sales History</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/admin/menu">Menu</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/admin/categories">Categories</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/admin/orders">Orders</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/admin/tables">Tables</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/admin/staff">Staff</a></li>
+                        <?php elseif (session()->get('role') === 'chef'): ?>
+                            <li class="nav-item"><a class="nav-link" href="/chef/dashboard">Dashboard</a></li>
+                        <?php elseif (session()->get('role') === 'cashier'): ?>
+                            <li class="nav-item"><a class="nav-link" href="/cashier/dashboard">Dashboard</a></li>
+                        <?php endif; ?>
                     <?php endif; ?>
                 </ul>
                 <ul class="navbar-nav ms-auto">

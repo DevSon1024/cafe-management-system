@@ -76,6 +76,11 @@
             </tfoot>
         </table>
         <hr>
+        <?php if ($order['order_type'] === 'dine_in'): ?>
+            <p class="text-center fw-bold">Guest Arrived</p>
+        <?php elseif ($order['order_type'] === 'take_away'): ?>
+            <p class="text-center fw-bold">Hurry!! he is Busy</p>
+        <?php endif; ?>
         <p class="text-center">Thank you for your visit!</p>
     </div>
 </div>

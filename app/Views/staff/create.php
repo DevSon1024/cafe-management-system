@@ -9,8 +9,9 @@
     </div>
     <div class="mb-3">
         <label for="role" class="form-label">Role</label>
-        <select name="role" class="form-select" required>
+        <select name="role" id="role" class="form-select" required>
             <option value="Admin">Admin</option>
+            <option value="Chef">Chef</option>
             <option value="Cashier">Cashier</option>
             <option value="Waiter">Waiter</option>
         </select>
@@ -23,6 +24,29 @@
             <option value="Night">Night</option>
         </select>
     </div>
+
+    <div id="credentials" style="display: none;">
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" name="email">
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" name="password">
+        </div>
+    </div>
+
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>
+
+<script>
+    document.getElementById('role').addEventListener('change', function() {
+        var credentialsDiv = document.getElementById('credentials');
+        if (this.value === 'Waiter') {
+            credentialsDiv.style.display = 'none';
+        } else {
+            credentialsDiv.style.display = 'block';
+        }
+    });
+</script>
 <?= $this->endSection() ?>

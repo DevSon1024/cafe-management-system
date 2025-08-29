@@ -9,10 +9,14 @@ class Guest implements FilterInterface
     public function before(RequestInterface $request, $arguments = null)
     {
         if (session()->get('isLoggedIn')) {
-            if (session()->get('role') === 'admin') {
-                return redirect()->to('/admin/dashboard'); // Corrected redirect
+            $role = session()->get('role');
+            if ($role === 'admin') {
+                return redirect()->to('/admin/dashboard');
+            } elseif ($role === 'chef') {
+                return redirect()->to('/chef/dashboard');
+            } elseif ($role === 'cashier') {
+                return redirect()->to('/cashier/dashboard');
             }
-            return redirect()->to('/user/dashboard');
         }
     }
 
