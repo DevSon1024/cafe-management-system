@@ -60,7 +60,7 @@
                 <?php $sub_total += $item['subtotal']; ?>
                 <?php endforeach; ?>
             </tbody>
-            <tfoot>
+           <tfoot>
                 <tr>
                     <th colspan="3" class="text-end">Sub-Total:</th>
                     <th>₹<?= number_format($sub_total, 2) ?></th>
@@ -71,7 +71,7 @@
                 </tr>
                 <tr>
                     <th colspan="3" class="text-end">Grand Total:</th>
-                    <th>₹<?= number_format($order['total_amount'], 2) ?></th>
+                    <th>₹<?= number_format($sub_total * 1.05, 2) ?></th>
                 </tr>
             </tfoot>
         </table>

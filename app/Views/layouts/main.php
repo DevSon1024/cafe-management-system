@@ -26,36 +26,17 @@
                         <li class="nav-item"><a class="nav-link" href="/admin/orders">Orders</a></li>
                         <li class="nav-item"><a class="nav-link" href="/admin/tables">Tables</a></li>
                         <li class="nav-item"><a class="nav-link" href="/admin/staff">Staff</a></li>
-                    <?php elseif (session()->get('isLoggedIn') && session()->get('role') === 'user'): ?>
-                        <li class="nav-item"><a class="nav-link" href="/user/dashboard">Dashboard</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/orders/new">New Order</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/user/orders">My Orders</a></li>
                     <?php endif; ?>
                 </ul>
                 <ul class="navbar-nav ms-auto">
                     <?php if (session()->get('isLoggedIn')): ?>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <?= session()->get('name') ?>
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <?php if (session()->get('role') === 'admin'): ?>
-                                    <li><a class="dropdown-item" href="/admin/profile">Profile</a></li>
-                                <?php else: ?>
-                                    <li><a class="dropdown-item" href="/user/profile">Profile</a></li>
-                                <?php endif; ?>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="/logout">Logout</a></li>
-                            </ul>
-                        </li>
+                            </li>
                     <?php else: ?>
                         <li class="nav-item">
                             <a class="nav-link" href="/login">Login</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/register">Register</a>
-                        </li>
-                    <?php endif; ?>
+                        <?php endif; ?>
                 </ul>
             </div>
         </div>

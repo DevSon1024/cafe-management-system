@@ -14,16 +14,9 @@ class ProfileController extends BaseController
         $userId = session()->get('user_id');
         $data['user'] = $userModel->find($userId);
 
-        if (session()->get('role') === 'admin') {
-            // For admins, fetch all users for the management table
-            $data['all_users'] = $userModel->findAll();
-            return view('admin/profile', $data);
-        }
-
-        // For regular users, fetch their order history
-        $orderModel = new OrderModel();
-        $data['orders'] = $orderModel->getOrdersByUserId($userId);
-        return view('user/profile', $data);
+        // SIMPLIFIED LOGIC
+        $data['all_users'] = $userModel->findAll();
+        return view('admin/profile', $data);
     }
 
     /**
@@ -35,11 +28,8 @@ class ProfileController extends BaseController
         $userId = session()->get('user_id');
         $data['user'] = $userModel->find($userId);
 
-        if (session()->get('role') === 'admin') {
-            return view('admin/edit_profile', $data);
-        }
-
-        return view('user/edit_profile', $data);
+        // SIMPLIFIED LOGIC
+        return view('admin/edit_profile', $data);
     }
 
     /**
@@ -79,7 +69,8 @@ class ProfileController extends BaseController
             // Update session data
             session()->set('name', $data['name']);
             session()->set('email', $data['email']);
-            return redirect()->to(session()->get('role') === 'admin' ? '/admin/profile' : '/user/profile')->with('success', 'Profile updated successfully.');
+            // SIMPLIFIED REDIRECT
+            return redirect()->to('/admin/profile')->with('success', 'Profile updated successfully.');
         }
 
         return redirect()->back()->withInput()->with('error', 'Failed to update profile.');

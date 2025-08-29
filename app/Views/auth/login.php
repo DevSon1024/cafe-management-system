@@ -79,12 +79,6 @@
                 </div>
                 
                 <div class="card-footer text-center">
-                    <p class="mb-0 text-muted">
-                        Don't have an account? 
-                        <a href="/register" class="text-decoration-none fw-semibold">
-                            Create one here
-                        </a>
-                    </p>
                 </div>
             </div>
             
