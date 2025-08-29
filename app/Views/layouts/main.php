@@ -18,6 +18,7 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
                     <?php if (session()->get('isLoggedIn') && session()->get('role') === 'admin'): ?>
                         <li class="nav-item"><a class="nav-link" href="/admin/dashboard">Dashboard</a></li>
                         <li class="nav-item"><a class="nav-link" href="/admin/sales">Sales History</a></li>
@@ -31,10 +32,18 @@
                 <ul class="navbar-nav ms-auto">
                     <?php if (session()->get('isLoggedIn')): ?>
                         <li class="nav-item dropdown">
-                            </li>
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <?= session()->get('name') ?>
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="/admin/profile">Profile</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                            </ul>
+                        </li>
                     <?php else: ?>
                         <li class="nav-item">
-                            <a class="nav-link" href="/login">Login</a>
+                            <a class="nav-link" href="/login">Login (for Admin)</a>
                         </li>
                         <?php endif; ?>
                 </ul>

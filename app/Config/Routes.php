@@ -5,17 +5,17 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
+$routes->get('/', 'Landing::index');
 
 // --- PUBLIC & GUEST ROUTES ---
 // Routes for users who are NOT logged in
 $routes->group('', ['filter' => 'guest'], function($routes) {
-    // $routes->get('/', 'UserController::login');
-    // $routes->get('login', 'UserController::login');
+    $routes->get('login', 'UserController::login');
+    $routes->post('login', 'UserController::authenticate');
 });
 
-// These routes handle the form submissions and don't need the guest filter
-// $routes->post('login', 'UserController::authenticate');
-// $routes->get('logout', 'UserController::logout');
+// Route for logged-in users to log out
+$routes->get('logout', 'UserController::logout');
 
 
 // --- ADMIN-ONLY ROUTES ---

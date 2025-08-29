@@ -6,7 +6,7 @@ class OrderModel extends Model
 {
     protected $table = 'orders';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['table_id', 'user_id', 'total_amount', 'status'];
+    protected $allowedFields = ['table_id', 'user_id', 'total_amount', 'status', 'order_type'];
     protected $useTimestamps = true;
     protected $createdField  = 'created_at';
     protected $updatedField  = '';
@@ -14,7 +14,7 @@ class OrderModel extends Model
     public function getOrdersWithDetails()
     {
         return $this->select('orders.*, tables.name as table_name')
-                    ->join('tables', 'tables.id = orders.table_id')
+                    ->join('tables', 'tables.id = orders.table_id', 'left')
                     ->orderBy('orders.created_at', 'DESC')
                     ->findAll();
     }
@@ -22,7 +22,7 @@ class OrderModel extends Model
     public function getOrderDetails($id)
     {
         return $this->select('orders.*, tables.name as table_name')
-                    ->join('tables', 'tables.id = orders.table_id')
+                    ->join('tables', 'tables.id = orders.table_id', 'left')
                     ->where('orders.id', $id)
                     ->first();
     }
@@ -30,7 +30,7 @@ class OrderModel extends Model
     public function getOrdersByUserId($userId)
     {
         return $this->select('orders.*, tables.name as table_name')
-                    ->join('tables', 'tables.id = orders.table_id')
+                    ->join('tables', 'tables.id = orders.table_id', 'left')
                     ->where('orders.user_id', $userId)
                     ->orderBy('orders.created_at', 'DESC')
                     ->findAll();
