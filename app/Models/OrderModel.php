@@ -6,6 +6,7 @@ class OrderModel extends Model
 {
     protected $table = 'orders';
     protected $primaryKey = 'id';
+    protected $returnType = 'array';
     protected $allowedFields = ['table_id', 'user_id', 'total_amount', 'status', 'order_type'];
     protected $useTimestamps = true;
     protected $createdField  = 'created_at';

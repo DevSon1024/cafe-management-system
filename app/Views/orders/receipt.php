@@ -87,7 +87,7 @@
 
 <div class="text-center mt-3 no-print">
     <?php
-    $back_url = (session()->get('role') === 'admin') ? '/admin/orders' : '/user/orders';
+    $back_url = session()->get('isLoggedIn') ? (session()->get('role') === 'admin' ? '/admin/orders' : '/user/orders') : '/';
     ?>
     <a href="<?= $back_url ?>" class="btn btn-secondary">Back to Orders</a>
     <button onclick="window.print()" class="btn btn-primary">Print Receipt</button>

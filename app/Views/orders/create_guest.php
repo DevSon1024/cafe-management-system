@@ -115,6 +115,7 @@
                                                                         <p class="card-text text-muted small flex-grow-1">
                                                                             <?= isset($item['description']) ? esc($item['description']) : 'Delicious and freshly prepared' ?>
                                                                         </p>
+                                                                        <p class="card-text fw-bold text-primary">₹<?= number_format($item['price'], 2) ?></p>
                                                                         <div class="mt-auto">
                                                                             <button type="button" class="btn btn-primary w-100 add-item-btn shadow-sm" data-id="<?= $item['id'] ?>" data-name="<?= esc($item['name']) ?>" data-price="<?= $item['price'] ?>">
                                                                                 <i class="bi bi-plus-circle me-2"></i>Add to Order

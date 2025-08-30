@@ -7,7 +7,9 @@ class ChefController extends BaseController
     public function index()
     {
         $orderModel = new OrderModel();
-        $data['orders'] = $orderModel->getOrdersWithDetails();
+        $data['orders'] = $orderModel
+            ->whereIn('orders.status', ['Pending', 'In Making'])
+            ->getOrdersWithDetails();
         return view('chef/dashboard', $data);
     }
 

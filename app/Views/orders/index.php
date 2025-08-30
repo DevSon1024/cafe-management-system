@@ -20,14 +20,14 @@
         <?php foreach($orders as $order): ?>
         <tr>
             <td><?= $order['id'] ?></td>
-            <td><?= esc($order['table_name']) ?></td>
+            <td><?= $order['order_type'] === 'take_away' ? 'Take Away Order' : esc($order['table_name']) ?></td>
             <td>₹<?= number_format($order['total_amount'], 2) ?></td>
-            <td><span class="badge bg-<?= $order['status'] == 'Pending' ? 'warning' : 'success' ?>"><?= $order['status'] ?></span></td>
+            <td><span class="badge bg-<?= $order['status'] == 'Pending' ? 'warning' : ($order['status'] == 'In Making' ? 'info' : 'success') ?>"><?= $order['status'] ?></span></td>
             <td><?= date('d-m-Y H:i', strtotime($order['created_at'])) ?></td>
             <td>
                 <a href="/admin/orders/receipt/<?= $order['id'] ?>" class="btn btn-sm btn-info">View Bill</a>
 
-                <?php if ($order['status'] == 'Pending'): ?>
+                <?php if (in_array($order['status'], ['Pending', 'In Making'])): ?>
                     <form action="/admin/orders/complete/<?= $order['id'] ?>" method="post" class="d-inline">
                         <?= csrf_field() ?>
                         <button type="submit" class="btn btn-sm btn-success">Complete</button>

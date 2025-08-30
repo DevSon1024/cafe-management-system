@@ -11,7 +11,7 @@ class OrderController extends BaseController
     public function index()
     {
         $orderModel = new OrderModel();
-        $data['orders'] = $orderModel->getOrdersWithDetails();
+        $data['orders'] = $orderModel->whereIn('orders.status', ['Pending', 'In Making'])->getOrdersWithDetails();
         return view('orders/index', $data);
     }
 
@@ -215,7 +215,7 @@ class OrderController extends BaseController
         $tableModel = new TableModel();
 
         $data = [
-            'status' => 'Completed',
+            'status' => 'Pending',
             'order_type' => $orderType
         ];
 
