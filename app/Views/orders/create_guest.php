@@ -64,52 +64,103 @@
             <div class="col-lg-9 col-md-8">
                 <div class="card shadow-sm">
                     <div class="card-header bg-light">
-                        <h4 class="mb-0 me-3">
-                            <i class="bi bi-menu-button-wide me-2 text-primary"></i>
-                            Our Menu
-                        </h4>
+                        <div class="d-flex justify-content-between align-items-center flex-wrap">
+                            <div class="d-flex align-items-center mb-2 mb-md-0">
+                                <h4 class="mb-0 me-3">
+                                    <i class="bi bi-menu-button-wide me-2 text-primary"></i>
+                                    Our Menu
+                                </h4>
+                                <span class="badge bg-primary"><?= count($menu_items) ?> items</span>
+                            </div>
+
+                            <div class="btn-group" role="group" aria-label="View toggle">
+                                <button type="button" class="btn btn-outline-primary active" id="grid-view-btn">
+                                    <i class="bi bi-grid-3x3-gap"></i> Grid
+                                </button>
+                                <button type="button" class="btn btn-outline-primary" id="table-view-btn">
+                                    <i class="bi bi-table"></i> Table
+                                </button>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="card-body">
                         <div id="menu-container">
                             <?php if (!empty($categories)): ?>
-                                <div class="accordion" id="menuAccordion">
-                                    <?php foreach($categories as $category): ?>
-                                        <?php if (isset($menu_by_category[$category['id']]) && !empty($menu_by_category[$category['id']])): ?>
-                                            <div class="accordion-item">
-                                                <h2 class="accordion-header" id="heading-<?= $category['id'] ?>">
-                                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-<?= $category['id'] ?>" aria-expanded="false" aria-controls="collapse-<?= $category['id'] ?>">
-                                                        <?= esc($category['name']) ?>
-                                                    </button>
-                                                </h2>
-                                                <div id="collapse-<?= $category['id'] ?>" class="accordion-collapse collapse" aria-labelledby="heading-<?= $category['id'] ?>" data-bs-parent="#menuAccordion">
-                                                    <div class="accordion-body">
-                                                        <div class="row g-3">
-                                                            <?php foreach($menu_by_category[$category['id']] as $item): ?>
-                                                                <div class="col-xl-4 col-lg-6 col-md-12">
-                                                                    <div class="card menu-item-card h-100 shadow-sm">
-                                                                        <img src="/uploads/<?= $item['image'] ?>" class="card-img-top" style="height: 200px; object-fit: cover;" alt="<?= esc($item['name']) ?>">
-                                                                        <div class="card-body d-flex flex-column">
-                                                                            <h6 class="card-title fw-bold"><?= esc($item['name']) ?></h6>
-                                                                            <p class="card-text text-muted small flex-grow-1">
-                                                                                <?= isset($item['description']) ? esc($item['description']) : 'Delicious and freshly prepared' ?>
-                                                                            </p>
-                                                                            <div class="mt-auto">
-                                                                                <button type="button" class="btn btn-primary w-100 add-item-btn shadow-sm" data-id="<?= $item['id'] ?>" data-name="<?= esc($item['name']) ?>" data-price="<?= $item['price'] ?>">
-                                                                                    <i class="bi bi-plus-circle me-2"></i>Add to Order
-                                                                                </button>
-                                                                            </div>
+                                <?php foreach($categories as $category): ?>
+                                    <?php if (isset($menu_by_category[$category['id']]) && !empty($menu_by_category[$category['id']])): ?>
+                                        <div class="category-section mb-4">
+                                            <div class="category-header d-flex align-items-center justify-content-between p-3 bg-light rounded cursor-pointer"
+                                                 data-bs-toggle="collapse"
+                                                 data-bs-target="#category-<?= $category['id'] ?>"
+                                                 aria-expanded="false">
+                                                <h5 class="mb-0 fw-bold text-primary">
+                                                    <i class="bi bi-chevron-right category-chevron me-2"></i>
+                                                    <?= esc($category['name']) ?>
+                                                </h5>
+                                                <span class="badge bg-secondary">
+                                                    <?= count($menu_by_category[$category['id']]) ?> items
+                                                </span>
+                                            </div>
+
+                                            <div class="collapse" id="category-<?= $category['id'] ?>">
+                                                <div class="grid-view mt-3">
+                                                    <div class="row g-3">
+                                                        <?php foreach($menu_by_category[$category['id']] as $item): ?>
+                                                            <div class="col-xl-4 col-lg-6 col-md-12">
+                                                                <div class="card menu-item-card h-100 shadow-sm">
+                                                                    <img src="/uploads/<?= $item['image'] ?>" class="card-img-top" style="height: 200px; object-fit: cover;" alt="<?= esc($item['name']) ?>">
+                                                                    <div class="card-body d-flex flex-column">
+                                                                        <h6 class="card-title fw-bold"><?= esc($item['name']) ?></h6>
+                                                                        <p class="card-text text-muted small flex-grow-1">
+                                                                            <?= isset($item['description']) ? esc($item['description']) : 'Delicious and freshly prepared' ?>
+                                                                        </p>
+                                                                        <div class="mt-auto">
+                                                                            <button type="button" class="btn btn-primary w-100 add-item-btn shadow-sm" data-id="<?= $item['id'] ?>" data-name="<?= esc($item['name']) ?>" data-price="<?= $item['price'] ?>">
+                                                                                <i class="bi bi-plus-circle me-2"></i>Add to Order
+                                                                            </button>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            <?php endforeach; ?>
-                                                        </div>
+                                                            </div>
+                                                        <?php endforeach; ?>
+                                                    </div>
+                                                </div>
+
+                                                <div class="table-view mt-3" style="display: none;">
+                                                    <div class="table-responsive">
+                                                        <table class="table table-hover">
+                                                            <thead class="table-light">
+                                                                <tr>
+                                                                    <th>Image</th>
+                                                                    <th>Item Name</th>
+                                                                    <th>Price</th>
+                                                                    <th>Action</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <?php foreach($menu_by_category[$category['id']] as $item): ?>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <img src="/uploads/<?= $item['image'] ?>" class="rounded" style="width: 60px; height: 60px; object-fit: cover;" alt="<?= esc($item['name']) ?>">
+                                                                        </td>
+                                                                        <td><?= esc($item['name']) ?></td>
+                                                                        <td>₹<?= number_format($item['price'], 2) ?></td>
+                                                                        <td>
+                                                                            <button type="button" class="btn btn-primary add-item-btn" data-id="<?= $item['id'] ?>" data-name="<?= esc($item['name']) ?>" data-price="<?= $item['price'] ?>">
+                                                                                <i class="bi bi-plus-circle me-2"></i>Add
+                                                                            </button>
+                                                                        </td>
+                                                                    </tr>
+                                                                <?php endforeach; ?>
+                                                            </tbody>
+                                                        </table>
                                                     </div>
                                                 </div>
                                             </div>
-                                        <?php endif; ?>
-                                    <?php endforeach; ?>
-                                </div>
+                                        </div>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -165,14 +216,46 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Script from the original create.php view can be reused here
     const orderItemsTbody = document.getElementById('order-items');
     const grandTotalTh = document.getElementById('grand-total');
     const grandTotalInput = document.getElementById('grand-total-input');
     const sidebarTotal = document.getElementById('sidebar-total');
     const cartCount = document.getElementById('cart-count');
     const emptyCartMessage = document.getElementById('empty-cart-message');
+    const gridViewBtn = document.getElementById('grid-view-btn');
+    const tableViewBtn = document.getElementById('table-view-btn');
     
+    gridViewBtn.addEventListener('click', function() {
+        document.querySelectorAll('.grid-view').forEach(el => el.style.display = 'block');
+        document.querySelectorAll('.table-view').forEach(el => el.style.display = 'none');
+        gridViewBtn.classList.add('active');
+        tableViewBtn.classList.remove('active');
+    });
+    
+    tableViewBtn.addEventListener('click', function() {
+        document.querySelectorAll('.grid-view').forEach(el => el.style.display = 'none');
+        document.querySelectorAll('.table-view').forEach(el => el.style.display = 'block');
+        tableViewBtn.classList.add('active');
+        gridViewBtn.classList.remove('active');
+    });
+
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.category-header')) {
+            const header = e.target.closest('.category-header');
+            const chevron = header.querySelector('.category-chevron');
+            const target = header.getAttribute('data-bs-target');
+            const collapse = document.querySelector(target);
+            
+            setTimeout(() => {
+                if (collapse.classList.contains('show')) {
+                    chevron.style.transform = 'rotate(90deg)';
+                } else {
+                    chevron.style.transform = 'rotate(0deg)';
+                }
+            }, 10);
+        }
+    });
+
     document.addEventListener('click', function(e) {
         if (e.target.classList.contains('add-item-btn') || e.target.closest('.add-item-btn')) {
             const button = e.target.classList.contains('add-item-btn') ? e.target : e.target.closest('.add-item-btn');
