@@ -101,7 +101,12 @@ class OrderController extends BaseController
             return redirect()->to('/user/orders')->with('error', 'You are not authorized to view this order.');
         }
         
-        $data['back_url'] = '/admin/orders';
+        if (session()->get('isLoggedIn') && session()->get('role') === 'admin') {
+            $data['back_url'] = '/admin/orders';
+        } else {
+            $data['back_url'] = '/'; // For guests or any other logged-in user
+        }
+        
         return view('orders/receipt', $data);
     }
     

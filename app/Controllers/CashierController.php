@@ -54,30 +54,41 @@ class CashierController extends BaseController
         $db->transStart();
 
         try {
-            // Validation
+            // Validation for items
             $items = $this->request->getPost('items');
             if (empty($items)) {
                  return redirect()->back()->withInput()->with('error', 'Cannot create an empty order.');
+            }
+            
+            $orderType = $this->request->getPost('order_type');
+            $tableId = $this->request->getPost('table_id');
+
+            // Server-side validation for table selection
+            if ($orderType === 'dine_in' && empty($tableId)) {
+                return redirect()->back()->withInput()->with('error', 'Please select a table for Dine-In orders.');
             }
 
             $orderModel = new OrderModel();
             $orderItemModel = new OrderItemModel();
             $tableModel = new TableModel();
             
-            $orderType = $this->request->getPost('order_type');
-            $tableId = $this->request->getPost('table_id');
-
-            $orderData = [
+            // Step 1: Create a basic order record, like the guest flow
+            $initialOrderData = [
                 'user_id'      => session()->get('user_id'),
                 'total_amount' => $this->request->getPost('grand_total'),
                 'status'       => 'Pending',
-                'order_type'   => $orderType,
-                'table_id'     => $orderType === 'dine_in' ? $tableId : null,
+                // 'order_type' and 'table_id' are omitted for now
             ];
 
-            $orderModel->insert($orderData);
+            $orderModel->insert($initialOrderData);
             $orderId = $orderModel->getInsertID();
+            
+            if (!$orderId) {
+                $db->transRollback();
+                return redirect()->back()->withInput()->with('error', 'Database error: Could not create the order.');
+            }
 
+            // Step 2: Add order items
             $quantities = $this->request->getPost('quantities');
             $subtotals = $this->request->getPost('subtotals');
 
@@ -91,6 +102,14 @@ class CashierController extends BaseController
                 $orderItemModel->insert($orderItemData);
             }
 
+            // Step 3: Update the order with type and table info
+            $updateData = [
+                'order_type' => $orderType,
+                'table_id'   => ($orderType === 'dine_in') ? $tableId : null,
+            ];
+            $orderModel->update($orderId, $updateData);
+
+            // Step 4: Update table status if it's a dine-in order
             if ($orderType === 'dine_in' && $tableId) {
                 $tableModel->update($tableId, ['status' => 'Occupied']);
             }
