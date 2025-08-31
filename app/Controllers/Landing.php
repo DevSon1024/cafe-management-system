@@ -7,6 +7,11 @@ class Landing extends BaseController
 {
     public function index()
     {
+        // Redirect chef away from the landing page
+        if (session()->get('isLoggedIn') && session()->get('role') === 'chef') {
+            return redirect()->to('/chef/dashboard');
+        }
+
         $menuModel = new MenuModel();
         $categoryModel = new CategoryModel();
 

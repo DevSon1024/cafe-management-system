@@ -4,28 +4,10 @@
 <style>
     /* These styles only apply when printing */
     @media print {
-        /* Hide everything that's not the receipt */
-        body * {
-            visibility: hidden;
-        }
-
-        /* Make the receipt card and its contents visible */
-        .receipt-card, .receipt-card * {
-            visibility: visible;
-        }
-
-        /* Position the receipt at the top of the page */
-        .receipt-card {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-        }
-        
-        /* Hide the action buttons and the debug toolbar */
-        .no-print, #debug-icon {
-            display: none;
-        }
+        body * { visibility: hidden; }
+        .receipt-card, .receipt-card * { visibility: visible; }
+        .receipt-card { position: absolute; left: 0; top: 0; width: 100%; }
+        .no-print, #debug-icon { display: none; }
     }
 </style>
 
@@ -36,7 +18,7 @@
     </div>
     <div class="card-body">
         <p><strong>Order ID:</strong> <?= $order['id'] ?></p>
-        <p><strong>Table:</strong> <?= esc($order['table_name']) ?></p>
+        <p><strong>Table:</strong> <?= $order['order_type'] === 'take_away' ? 'Take Away' : esc($order['table_name']) ?></p>
         <p><strong>Date:</strong> <?= date('d M Y, H:i:s', strtotime($order['created_at'])) ?></p>
         <hr>
         <table class="table">
@@ -71,25 +53,21 @@
                 </tr>
                 <tr>
                     <th colspan="3" class="text-end">Grand Total:</th>
-                    <th>₹<?= number_format($sub_total * 1.05, 2) ?></th>
+                    <th>₹<?= number_format($order['total_amount'], 2) ?></th>
                 </tr>
             </tfoot>
         </table>
         <hr>
-        <?php if ($order['order_type'] === 'dine_in'): ?>
-            <p class="text-center fw-bold">Guest Arrived</p>
-        <?php elseif ($order['order_type'] === 'take_away'): ?>
-            <p class="text-center fw-bold">Hurry!! he is Busy</p>
-        <?php endif; ?>
         <p class="text-center">Thank you for your visit!</p>
     </div>
 </div>
 
 <div class="text-center mt-3 no-print">
     <?php
-    $back_url = session()->get('isLoggedIn') ? (session()->get('role') === 'admin' ? '/admin/orders' : '/user/orders') : '/';
+    // Use the back_url provided by the controller, or a default fallback
+    $redirect_url = $back_url ?? (session()->get('role') === 'admin' ? '/admin/orders' : '/');
     ?>
-    <a href="<?= $back_url ?>" class="btn btn-secondary">Back to Orders</a>
+    <a href="<?= $redirect_url ?>" class="btn btn-secondary">Back</a>
     <button onclick="window.print()" class="btn btn-primary">Print Receipt</button>
 </div>
 

@@ -62,6 +62,7 @@ $routes->group('chef', ['filter' => 'chef'], function($routes) {
 $routes->group('cashier', ['filter' => 'cashier'], function($routes) {
     $routes->get('dashboard', 'CashierController::index');
     $routes->get('sales', 'SalesController::index');
-    $routes->get('orders/new', 'OrderController::new');
-    $routes->get('orders/receipt/(:num)', 'OrderController::receipt/$1');
+    $routes->get('orders/new', 'CashierController::new_order');
+    $routes->post('orders/create', 'CashierController::create_order');
+    $routes->get('receipt/(:num)', 'CashierController::receipt/$1');
 });

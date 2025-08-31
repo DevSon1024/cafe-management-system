@@ -40,7 +40,6 @@
     <div class="row mt-4">
         <div class="col-md-12">
             <h4>Quick Actions</h4>
-            <a href="/orders/new" class="btn btn-info">New Order</a>
             <a href="/admin/sales" class="btn btn-info">View Sales History</a>
             <a href="/admin/menu/new" class="btn btn-info">Add Menu Item</a>
             <a href="/admin/tables" class="btn btn-info">Manage Tables</a>

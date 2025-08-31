@@ -11,6 +11,11 @@ class Chef implements FilterInterface
         if (session()->get('role') !== 'chef') {
             return redirect()->to('/login');
         }
+
+        // Redirect away from landing page if chef is logged in
+        if (session()->get('isLoggedIn') && uri_string() === '/') {
+            return redirect()->to('/chef/dashboard');
+        }
     }
 
     public function after(RequestInterface $request, ResponseInterface $response, $arguments = null)

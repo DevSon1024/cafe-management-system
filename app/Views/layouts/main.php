@@ -30,6 +30,7 @@
                             <li class="nav-item"><a class="nav-link" href="/admin/staff">Staff</a></li>
                         <?php elseif (session()->get('role') === 'chef'): ?>
                             <li class="nav-item"><a class="nav-link" href="/chef/dashboard">Dashboard</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/chef/order_history">Order History</a></li>
                         <?php elseif (session()->get('role') === 'cashier'): ?>
                             <li class="nav-item"><a class="nav-link" href="/cashier/dashboard">Dashboard</a></li>
                         <?php endif; ?>
