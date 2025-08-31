@@ -118,6 +118,7 @@ class OrderController extends BaseController
         // Corrected Redirect Path
         return redirect()->to('/admin/orders')->with('status', 'Order marked as completed and table is now available.');
     }
+    
     public function new_guest_order()
     {
         $menuModel = new MenuModel();
@@ -193,14 +194,16 @@ class OrderController extends BaseController
             $data['tables'] = $tableModel->where('status', 'Available')->findAll();
             $data['order_id'] = $orderId;
             $data['order_type'] = 'dine_in';
-            $data['total_amount'] = $order['total_amount']; // Corrected line
+            // FIX: Convert object to array or use object property access
+            $data['total_amount'] = is_array($order) ? $order['total_amount'] : $order->total_amount;
             return view('orders/payment', $data);
         }
 
         // For take away, go directly to payment simulation
         $data['order_id'] = $orderId;
         $data['order_type'] = 'take_away';
-        $data['total_amount'] = $order['total_amount']; // Corrected line
+        // FIX: Convert object to array or use object property access
+        $data['total_amount'] = is_array($order) ? $order['total_amount'] : $order->total_amount;
         return view('orders/payment', $data);
     }
 
