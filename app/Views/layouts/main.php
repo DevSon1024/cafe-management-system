@@ -50,7 +50,7 @@
                         </li>
                     <?php else: ?>
                         <li class="nav-item">
-                            <a class="nav-link" href="/login">Login (for Admin)</a>
+                            <a class="nav-link" href="/login">Login</a>
                         </li>
                         <?php endif; ?>
                 </ul>

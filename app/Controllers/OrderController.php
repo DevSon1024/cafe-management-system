@@ -156,7 +156,8 @@ class OrderController extends BaseController
 
             $orderData = [
                 'total_amount' => $this->request->getPost('grand_total'),
-                'status'       => 'Pending'
+                'status'       => 'Pending',
+                'order_type'   => 'Take Away' // Set default order type
             ];
             $orderModel->insert($orderData);
             $orderId = $orderModel->getInsertID();
