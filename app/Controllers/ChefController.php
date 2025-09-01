@@ -1,16 +1,25 @@
 <?php namespace App\Controllers;
 
 use App\Models\OrderModel;
-use App\Models\TableModel; // Import TableModel
+use App\Models\TableModel;
+use App\Models\OrderItemModel; // Import OrderItemModel
 
 class ChefController extends BaseController
 {
     public function index()
     {
         $orderModel = new OrderModel();
-        $data['orders'] = $orderModel
+        $orderItemModel = new OrderItemModel();
+        $orders = $orderModel
             ->whereIn('orders.status', ['Pending', 'In Making'])
             ->getOrdersWithDetails();
+
+        // Fetch items for each order
+        foreach ($orders as &$order) {
+            $order['items'] = $orderItemModel->getItemsByOrderId($order['id']);
+        }
+
+        $data['orders'] = $orders;
         return view('chef/dashboard', $data);
     }
 
@@ -36,9 +45,17 @@ class ChefController extends BaseController
     public function order_history()
     {
         $orderModel = new OrderModel();
-        $data['orders'] = $orderModel
+        $orderItemModel = new OrderItemModel(); // Instantiate the model
+        $orders = $orderModel
             ->where('orders.status', 'Completed')
             ->getOrdersWithDetails();
+
+        // Fetch items for each completed order
+        foreach ($orders as &$order) {
+            $order['items'] = $orderItemModel->getItemsByOrderId($order['id']);
+        }
+
+        $data['orders'] = $orders;
         return view('chef/order_history', $data);
     }
 }

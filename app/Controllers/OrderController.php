@@ -258,6 +258,15 @@ class OrderController extends BaseController
     {
         $orderModel = new OrderModel();
         $orderItemModel = new OrderItemModel();
+        $tableModel = new TableModel();
+
+        // Find the order to get the table ID
+        $order = $orderModel->find($id);
+
+        // If the order exists and has a table, set the table to "Available"
+        if ($order && !empty($order['table_id'])) {
+            $tableModel->update($order['table_id'], ['status' => 'Available']);
+        }
 
         $orderItemModel->where('order_id', $id)->delete();
         $orderModel->delete($id);
