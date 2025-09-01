@@ -56,6 +56,7 @@ body {
     margin: 0;
     padding: 0;
     min-height: 100vh;
+    padding-bottom: 120px; /* Add padding to the bottom of the body */
 }
 
 /* Typography */
@@ -734,14 +735,60 @@ p {
     border-color: var(--gray-300) !important;
 }
 
+
+/* --- Bottom Order Bar --- */
+.bottom-order-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    padding: var(--spacing-md) var(--spacing-lg);
+    box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
+    z-index: 1030;
+    border-top: 1px solid var(--gray-200);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: transform 0.3s ease;
+}
+
+.bottom-order-bar.hidden {
+    transform: translateY(100%);
+}
+
+.bottom-order-bar-summary {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+}
+
+.bottom-order-bar-summary .item-count {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--secondary-color);
+}
+
+.bottom-order-bar-summary .total-amount {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--success-color);
+}
+
+.bottom-order-bar .btn {
+    width: auto; /* Override responsive full-width button */
+    min-width: 200px;
+}
+
 /* Print Styles */
 @media print {
-    .navbar, .footer, .no-print {
+    .navbar, .footer, .no-print, .bottom-order-bar {
         display: none !important;
     }
     
     body {
         background: white !important;
+        padding-bottom: 0;
     }
     
     .card {

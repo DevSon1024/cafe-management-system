@@ -30,38 +30,7 @@
         <?= csrf_field() ?>
 
         <div class="row g-4">
-            <div class="col-lg-3 col-md-4">
-                <div class="card shadow-sm sticky-top" style="top: 100px;">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0">
-                            <i class="bi bi-clipboard-check me-2"></i>
-                            Order Details
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="order-summary mb-3">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <span class="fw-bold">Total Amount:</span>
-                                <span class="fs-5 fw-bold text-success" id="sidebar-total">₹0.00</span>
-                            </div>
-                        </div>
-
-                        <button type="submit" class="btn btn-success btn-lg w-100 shadow-sm">
-                            <i class="bi bi-check-circle me-2"></i>
-                            Proceed to Checkout
-                        </button>
-
-                        <div class="mt-3 text-center">
-                            <small class="text-muted">
-                                <i class="bi bi-info-circle me-1"></i>
-                                Review your order below
-                            </small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-9 col-md-8">
+            <div class="col-md-12">
                 <div class="card shadow-sm">
                     <div class="card-header bg-light">
                         <h4 class="mb-0">
@@ -145,7 +114,21 @@
         </div>
         
         <input type="hidden" name="grand_total" id="grand-total-input" value="0">
+         <button type="submit" id="main-submit-btn" class="d-none">Submit</button>
     </form>
+</div>
+
+<div class="bottom-order-bar hidden" id="bottom-bar">
+    <div class="bottom-order-bar-summary">
+        <div class="item-count">
+            <i class="bi bi-cart3"></i>
+            <span id="bottom-bar-cart-count">0</span> Items
+        </div>
+        <div class="total-amount" id="bottom-bar-total">₹0.00</div>
+    </div>
+    <button type="button" id="bottom-bar-submit-btn" class="btn btn-success btn-lg shadow-sm">
+        <i class="bi bi-check-circle me-2"></i>Proceed to Checkout
+    </button>
 </div>
 
 <script>
@@ -155,7 +138,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const subTotalTh = document.getElementById('sub-total');
     const gstTotalTh = document.getElementById('gst-total');
     const grandTotalInput = document.getElementById('grand-total-input');
-    const sidebarTotal = document.getElementById('sidebar-total');
+    
+    // Bottom Bar Elements
+    const bottomBar = document.getElementById('bottom-bar');
+    const bottomBarCartCount = document.getElementById('bottom-bar-cart-count');
+    const bottomBarTotal = document.getElementById('bottom-bar-total');
+    const bottomBarSubmitBtn = document.getElementById('bottom-bar-submit-btn');
+    const orderForm = document.getElementById('order-form');
+
     const cartCount = document.getElementById('cart-count');
     const emptyCartMessage = document.getElementById('empty-cart-message');
 
@@ -209,6 +199,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    bottomBarSubmitBtn.addEventListener('click', function() {
+        orderForm.requestSubmit();
+    });
+
     function updateRowSubtotal(row) {
         const price = parseFloat(row.querySelector('.price').textContent.replace('₹', ''));
         const quantity = parseInt(row.querySelector('.quantity-input').value);
@@ -226,15 +220,24 @@ document.addEventListener('DOMContentLoaded', function() {
             itemCount += parseInt(row.querySelector('.quantity-input').value);
         });
         
+        if (itemCount > 0) {
+            bottomBar.classList.remove('hidden');
+        } else {
+            bottomBar.classList.add('hidden');
+        }
+        
         const gst = subTotal * 0.05;
         const grandTotal = subTotal + gst;
 
         subTotalTh.textContent = '₹' + subTotal.toFixed(2);
         gstTotalTh.textContent = '₹' + gst.toFixed(2);
         grandTotalTh.textContent = '₹' + grandTotal.toFixed(2);
-        sidebarTotal.textContent = '₹' + grandTotal.toFixed(2);
         grandTotalInput.value = grandTotal.toFixed(2);
         cartCount.textContent = itemCount;
+
+        // Update Bottom Bar
+        bottomBarCartCount.textContent = itemCount;
+        bottomBarTotal.textContent = '₹' + grandTotal.toFixed(2);
     }
 });
 </script>
