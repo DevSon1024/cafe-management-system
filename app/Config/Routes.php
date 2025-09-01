@@ -16,7 +16,8 @@ $routes->group('', ['filter' => 'guest'], function($routes) {
 
 // Route for logged-in users to log out
 $routes->get('logout', 'UserController::logout');
-
+$routes->get('notifications/unread', 'NotificationController::getUnread', ['filter' => 'auth']);
+$routes->post('notifications/mark-as-read', 'NotificationController::markAsRead', ['filter' => 'auth']);
 
 // --- ADMIN-ONLY ROUTES ---
 // All admin functionalities are grouped and prefixed here

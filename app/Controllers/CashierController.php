@@ -5,6 +5,8 @@ use App\Models\OrderItemModel;
 use App\Models\TableModel;
 use App\Models\MenuModel;
 use App\Models\CategoryModel;
+use App\Models\NotificationModel;
+use App\Models\UserModel;
 
 class CashierController extends BaseController
 {
@@ -115,12 +117,39 @@ class CashierController extends BaseController
             }
 
             $db->transComplete();
+            $this->createOrderNotification($orderId);
             
             return redirect()->to('/cashier/receipt/' . $orderId)->with('status', 'Order Placed & Payment Complete!');
 
         } catch (\Exception $e) {
             $db->transRollback();
             return redirect()->back()->withInput()->with('error', 'Failed to place order: ' . $e->getMessage());
+        }
+    }
+    private function createOrderNotification($orderId)
+    {
+        $userModel = new UserModel();
+        $notificationModel = new NotificationModel();
+        $orderItemModel = new OrderItemModel();
+
+        $adminsAndChefs = $userModel->whereIn('role', ['admin', 'chef'])->findAll();
+        $orderItems = $orderItemModel->getItemsByOrderId($orderId);
+
+        $itemList = '<ul>';
+        foreach ($orderItems as $item) {
+            $itemList .= '<li>' . esc($item['item_name']) . ' (Qty: ' . $item['quantity'] . ')</li>';
+        }
+        $itemList .= '</ul>';
+
+        $message = 'A new order (ID: ' . $orderId . ') has been placed.' . $itemList;
+
+        foreach ($adminsAndChefs as $user) {
+            $notificationModel->save([
+                'user_id'  => $user['id'],
+                'order_id' => $orderId,
+                'message'  => $message,
+                'is_read'  => 0
+            ]);
         }
     }
     
