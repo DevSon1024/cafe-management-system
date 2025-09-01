@@ -200,13 +200,12 @@ class OrderController extends BaseController
         $adminsAndChefs = $userModel->whereIn('role', ['admin', 'chef'])->findAll();
         $orderItems = $orderItemModel->getItemsByOrderId($orderId);
 
-        $itemList = '<ul>';
-        foreach ($orderItems as $item) {
-            $itemList .= '<li>' . esc($item['item_name']) . ' (Qty: ' . $item['quantity'] . ')</li>';
-        }
-        $itemList .= '</ul>';
+        // A cleaner message for the toast
+        $itemNames = array_map(function($item) {
+            return esc($item['item_name']) . ' (x' . $item['quantity'] . ')';
+        }, $orderItems);
 
-        $message = 'A new order (ID: ' . $orderId . ') has been placed.' . $itemList;
+        $message = 'New order #' . $orderId . ' placed. Items: ' . implode(', ', $itemNames);
 
         foreach ($adminsAndChefs as $user) {
             $notificationModel->save([

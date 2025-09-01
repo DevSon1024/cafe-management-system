@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="utf-t">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>The Code Cafe</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -11,7 +11,9 @@
 </head>
 <body>
 
-    <!-- Sliding Sidebar -->
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 1100" id="notification-toast-container">
+        </div>
+
     <div id="sidebar" class="sidebar-container">
         <div class="sidebar-header">
             <h5 class="mb-0 text-white">Menu</h5>
@@ -39,28 +41,24 @@
     </div>
     <div id="sidebar-overlay"></div>
 
-    <!-- Main Header -->
     <header class="main-header">
         <div class="container-fluid d-flex justify-content-between align-items-center">
             <button class="btn text-white" id="hamburger-menu">
                 <i class="bi bi-list fs-4"></i>
             </button>
             <a class="navbar-brand" href="/">☕ The Code Cafe</a>
-            
+
             <div class="d-flex align-items-center">
                 <?php if (session()->get('isLoggedIn')): ?>
-                    <!-- Notification Bell -->
                     <div class="dropdown me-2" id="notification-bell">
                         <a class="nav-link dropdown-toggle text-white" href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="bi bi-bell-fill fs-5"></i>
                             <span class="badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle" id="notification-count" style="display: none; font-size: 0.6em; padding: .25em .5em;"></span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown" id="notification-list" style="width: 300px;">
-                            <!-- Notifications will be loaded here by JavaScript -->
-                        </ul>
+                            </ul>
                     </div>
-                    
-                    <!-- User Dropdown -->
+
                     <div class="dropdown">
                         <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="bi bi-person-circle fs-4 me-1"></i>
@@ -110,39 +108,66 @@
         if (overlay) overlay.addEventListener('click', closeSidebar);
     });
 
-    // --- Notification Script ---
+    // --- MODIFIED Notification Script ---
     <?php if (session()->get('isLoggedIn')): ?>
+    const userRole = '<?= session()->get('role') ?>';
+
+    function createNotificationToast(notification) {
+        const toastContainer = document.getElementById('notification-toast-container');
+        const messageWithoutHtml = notification.message.replace(/<[^>]*>?/gm, ' ');
+
+        // Define the correct redirect URL based on the user's role
+        let viewUrl = '#';
+        if (userRole === 'admin') {
+            viewUrl = `/admin/orders`;
+        } else if (userRole === 'chef') {
+            viewUrl = `/chef/dashboard`;
+        }
+
+        const toastHTML = `
+            <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header">
+                    <strong class="me-auto"><i class="bi bi-bell-fill me-2"></i>New Order Received</strong>
+                    <small>Just now</small>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                    ${messageWithoutHtml}
+                    <div class="mt-2 pt-2 border-top">
+                        <a href="${viewUrl}" class="btn btn-primary btn-sm">View</a>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        toastContainer.insertAdjacentHTML('beforeend', toastHTML);
+        const newToastEl = toastContainer.lastElementChild;
+        const newToast = new bootstrap.Toast(newToastEl, { autohide: false }); // Notifications persist until closed
+        newToast.show();
+    }
+
     function fetchNotifications() {
         fetch('/notifications/unread')
             .then(response => response.json())
             .then(data => {
-                const count = data.length;
-                const notificationCount = document.getElementById('notification-count');
-                const notificationList = document.getElementById('notification-list');
-
-                if (count > 0) {
-                    notificationCount.textContent = count;
-                    notificationCount.style.display = 'inline-block';
-                } else {
-                    notificationCount.style.display = 'none';
-                }
-
-                let notificationsHtml = '';
                 if (data.length > 0) {
+                    // Update bell count
+                    const notificationCount = document.getElementById('notification-count');
+                    notificationCount.textContent = data.length;
+                    notificationCount.style.display = 'inline-block';
+
+                    // Create a toast for each new notification
                     data.forEach(notification => {
-                        const messageWithoutHtml = notification.message.replace(/<[^>]*>?/gm, ' ');
-                        notificationsHtml += `<li><a class="dropdown-item" href="/admin/orders/receipt/${notification.order_id}">${messageWithoutHtml}</a></li>`;
+                        createNotificationToast(notification);
                     });
-                     notificationsHtml += '<li><hr class="dropdown-divider"></li>';
-                     notificationsHtml += '<li><p class="dropdown-item-text text-center text-muted small">Notifications marked as read on open.</p></li>';
-                } else {
-                    notificationsHtml = '<li><span class="dropdown-item-text text-center text-muted p-3">No new notifications</span></li>';
+
+                    // Mark as read after showing them
+                    markNotificationsAsRead();
                 }
-                notificationList.innerHTML = notificationsHtml;
             });
     }
 
-    document.getElementById('notification-bell').addEventListener('show.bs.dropdown', function() {
+    function markNotificationsAsRead() {
         fetch('/notifications/mark-as-read', {
             method: 'POST',
             headers: {
@@ -151,16 +176,21 @@
                 '<?= csrf_header() ?>': '<?= csrf_hash() ?>'
             }
         }).then(() => {
-            setTimeout(() => {
+            // After marking as read, we can hide the bell count after a delay
+             setTimeout(() => {
                 document.getElementById('notification-count').style.display = 'none';
-            }, 500);
+            }, 5000); // Hide after 5 seconds
         });
-    });
-    
-    // Fetch notifications every 30 seconds
-    setInterval(fetchNotifications, 30000);
+    }
 
-    // Fetch notifications on page load
+    // Don't mark as read when just opening the dropdown.
+    // We now do it after displaying the toasts.
+    // document.getElementById('notification-bell').addEventListener('show.bs.dropdown', markNotificationsAsRead);
+
+    // Fetch notifications every 15 seconds for a more responsive feel
+    setInterval(fetchNotifications, 15000);
+
+    // Initial fetch on page load
     fetchNotifications();
     <?php endif; ?>
     </script>
