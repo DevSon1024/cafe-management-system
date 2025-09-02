@@ -1,3 +1,7 @@
+<?php
+$settingsModel = new \App\Models\SettingsModel();
+$settings = $settingsModel->findAllAsArray();
+?>
 <?= $this->extend('layouts/main') ?>
 <?= $this->section('content') ?>
 
@@ -13,7 +17,9 @@
 
 <div class="card receipt-card">
     <div class="card-header text-center">
-        <h3>The Code Cafe</h3>
+        <h3><?= esc($settings['cafe_name'] ?? 'The Code Cafe') ?></h3>
+        <p><?= esc($settings['address'] ?? '123 CodeIgniter Avenue, Webville, PHP 74000') ?></p>
+        <p>GST: <?= esc($settings['gst_number'] ?? 'N/A') ?> | Phone: <?= esc($settings['phone'] ?? '+91 12345 67890') ?> | Email: <?= esc($settings['email'] ?? 'contact@thecodecafe.com') ?></p>
         <p>Receipt / Bill</p>
     </div>
     <div class="card-body">

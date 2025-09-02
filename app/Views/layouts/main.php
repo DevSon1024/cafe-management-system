@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -21,6 +22,7 @@
         </div>
         <ul class="sidebar-nav">
             <li><a class="sidebar-link" href="/"><i class="bi bi-house-fill me-2"></i>Home</a></li>
+            <li><a class="sidebar-link" href="/about"><i class="bi bi-info-circle-fill me-2"></i>About</a></li>
             <?php if (session()->get('isLoggedIn')): ?>
                 <?php if (session()->get('role') === 'admin'): ?>
                     <li><a class="sidebar-link" href="/admin/dashboard"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
@@ -30,6 +32,7 @@
                     <li><a class="sidebar-link" href="/admin/orders"><i class="bi bi-card-checklist me-2"></i>Orders</a></li>
                     <li><a class="sidebar-link" href="/admin/tables"><i class="bi bi-grid-3x3-gap-fill me-2"></i>Tables</a></li>
                     <li><a class="sidebar-link" href="/admin/staff"><i class="bi bi-people-fill me-2"></i>Staff</a></li>
+                    <li><a class="sidebar-link" href="/admin/settings"><i class="bi bi-gear-fill me-2"></i>Settings</a></li>
                 <?php elseif (session()->get('role') === 'chef'): ?>
                     <li><a class="sidebar-link" href="/chef/dashboard"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
                     <li><a class="sidebar-link" href="/chef/order_history"><i class="bi bi-clock-history me-2"></i>Order History</a></li>
@@ -194,5 +197,6 @@
     fetchNotifications();
     <?php endif; ?>
     </script>
+    <?= $this->renderSection('scripts') ?>
 </body>
 </html>

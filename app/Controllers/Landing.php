@@ -2,6 +2,7 @@
 
 use App\Models\MenuModel;
 use App\Models\CategoryModel;
+use App\Models\SettingsModel;
 
 class Landing extends BaseController
 {
@@ -26,5 +27,12 @@ class Landing extends BaseController
         }
 
         return view('landing_page', $data);
+    }
+    
+    public function about()
+    {
+        $settingsModel = new SettingsModel();
+        $data['settings'] = $settingsModel->findAllAsArray();
+        return view('about', $data);
     }
 }

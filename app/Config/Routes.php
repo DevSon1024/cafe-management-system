@@ -6,6 +6,7 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 $routes->get('/', 'Landing::index');
+$routes->get('/about', 'Landing::about');
 
 // --- PUBLIC & GUEST ROUTES ---
 // Routes for users who are NOT logged in
@@ -26,7 +27,9 @@ $routes->group('admin', ['filter' => 'admin'], function($routes) {
     $routes->get('sales', 'SalesController::index');
     $routes->get('profile', 'ProfileController::index');
     $routes->get('profile/edit', 'ProfileController::edit');
-    $routes->post('profile/update', 'ProfileController::update'); 
+    $routes->post('profile/update', 'ProfileController::update');
+    $routes->get('settings', 'SettingsController::index');
+    $routes->post('settings/update', 'SettingsController::update');
     
     // Resource routes now correctly live inside the admin group
     $routes->resource('menu', ['controller' => 'MenuController']);
