@@ -278,8 +278,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const orderItemsCount = document.getElementById('order-items-count');
     const emptyCartMessage = document.getElementById('empty-cart-message');
     
-    // View toggle and other UI scripts remain the same...
-    
     document.addEventListener('click', function(e) {
         if (e.target.classList.contains('add-item-btn') || e.target.closest('.add-item-btn')) {
             const button = e.target.classList.contains('add-item-btn') ? e.target : e.target.closest('.add-item-btn');
@@ -300,7 +298,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 newRow.innerHTML = `
                     <td><strong>${name}</strong><input type="hidden" name="items[]" value="${id}"></td>
                     <td>
-                        <input type="number" name="quantities[]" class="form-control quantity-input" value="1" min="1" style="width: 80px;">
+                        <div class="input-group" style="width: 130px;">
+                            <button class="btn btn-danger decrease-qty" type="button">-</button>
+                            <input type="text" name="quantities[]" class="form-control quantity-input text-center" value="1" min="1" readonly>
+                            <button class="btn btn-success increase-qty" type="button">+</button>
+                        </div>
                     </td>
                     <td class="price">₹${price.toFixed(2)}</td>
                     <td class="subtotal fw-bold text-success">₹${price.toFixed(2)}</td>
@@ -313,18 +315,27 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    orderItemsTbody.addEventListener('input', function(e) {
-        if (e.target.classList.contains('quantity-input')) {
-            const row = e.target.closest('tr');
-            if(parseInt(e.target.value) < 1) e.target.value = 1;
-            updateRowSubtotal(row);
+    orderItemsTbody.addEventListener('click', function(e) {
+        const target = e.target;
+        
+        if (target.classList.contains('increase-qty')) {
+            const input = target.parentElement.querySelector('.quantity-input');
+            input.value = parseInt(input.value) + 1;
+            updateRowSubtotal(target.closest('tr'));
             updateGrandTotal();
         }
-    });
 
-    orderItemsTbody.addEventListener('click', function(e) {
-        if (e.target.closest('.remove-item-btn')) {
-            e.target.closest('tr').remove();
+        if (target.classList.contains('decrease-qty')) {
+            const input = target.parentElement.querySelector('.quantity-input');
+            if (parseInt(input.value) > 1) {
+                input.value = parseInt(input.value) - 1;
+                updateRowSubtotal(target.closest('tr'));
+                updateGrandTotal();
+            }
+        }
+        
+        if (target.closest('.remove-item-btn')) {
+            target.closest('tr').remove();
             updateGrandTotal();
             if (orderItemsTbody.querySelectorAll('tr[data-id]').length === 0 && emptyCartMessage) {
                 emptyCartMessage.style.display = 'table-row';

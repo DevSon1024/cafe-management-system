@@ -15,6 +15,10 @@ class Landing extends BaseController
 
         $menuModel = new MenuModel();
         $categoryModel = new CategoryModel();
+        $settingsModel = new SettingsModel();
+
+        $settings = $settingsModel->findAllAsArray();
+        $data['cafeName'] = esc($settings['cafe_name'] ?? 'The Code Cafe');
 
         $data['categories'] = $categoryModel->findAll();
         $data['menu_items'] = $menuModel->getMenuItemsWithCategories();

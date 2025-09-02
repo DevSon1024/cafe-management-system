@@ -1,9 +1,14 @@
+<?php
+$settingsModel = new \App\Models\SettingsModel();
+$settings = $settingsModel->findAllAsArray();
+$cafeName = esc($settings['cafe_name'] ?? 'The Code Cafe');
+?>
 <!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>The Code Cafe</title>
+    <title><?= $cafeName ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="/css/style.css">
@@ -49,7 +54,7 @@
             <button class="btn text-white" id="hamburger-menu">
                 <i class="bi bi-list fs-4"></i>
             </button>
-            <a class="navbar-brand" href="/">☕ The Code Cafe</a>
+            <a class="navbar-brand" href="/">☕ <?= $cafeName ?></a>
 
             <div class="d-flex align-items-center">
                 <?php if (session()->get('isLoggedIn')): ?>
@@ -85,7 +90,7 @@
     </main>
 
     <footer class="text-center mt-5 py-3 bg-light">
-        <p>&copy; <?= date('Y') ?> The Code Cafe. All Rights Reserved.</p>
+        <p>&copy; <?= date('Y') ?> <?= $cafeName ?>. All Rights Reserved.</p>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -145,7 +150,7 @@
 
         toastContainer.insertAdjacentHTML('beforeend', toastHTML);
         const newToastEl = toastContainer.lastElementChild;
-        const newToast = new bootstrap.Toast(newToastEl, { autohide: false }); // Notifications persist until closed
+        const newToast = new bootstrap.Toast(newToastEl, { autohide: true, delay: 20000 }); // Autohide after 20 seconds
         newToast.show();
     }
 
@@ -186,12 +191,8 @@
         });
     }
 
-    // Don't mark as read when just opening the dropdown.
-    // We now do it after displaying the toasts.
-    // document.getElementById('notification-bell').addEventListener('show.bs.dropdown', markNotificationsAsRead);
-
-    // Fetch notifications every 15 seconds for a more responsive feel
-    setInterval(fetchNotifications, 15000);
+    // Fetch notifications every 5 seconds for a more responsive feel
+    setInterval(fetchNotifications, 5000);
 
     // Initial fetch on page load
     fetchNotifications();

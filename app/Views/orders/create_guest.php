@@ -139,7 +139,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const gstTotalTh = document.getElementById('gst-total');
     const grandTotalInput = document.getElementById('grand-total-input');
     
-    // Bottom Bar Elements
     const bottomBar = document.getElementById('bottom-bar');
     const bottomBarCartCount = document.getElementById('bottom-bar-cart-count');
     const bottomBarTotal = document.getElementById('bottom-bar-total');
@@ -168,7 +167,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 newRow.dataset.id = id;
                 newRow.innerHTML = `
                     <td><strong>${name}</strong><input type="hidden" name="items[]" value="${id}"></td>
-                    <td><input type="number" name="quantities[]" class="form-control quantity-input" value="1" min="1" style="width: 70px;"></td>
+                    <td>
+                        <div class="input-group" style="width: 130px;">
+                            <button class="btn btn-danger decrease-qty" type="button">-</button>
+                            <input type="text" name="quantities[]" class="form-control quantity-input text-center" value="1" min="1" readonly>
+                            <button class="btn btn-success increase-qty" type="button">+</button>
+                        </div>
+                    </td>
                     <td class="price">₹${price.toFixed(2)}</td>
                     <td class="subtotal">₹${price.toFixed(2)}</td>
                     <input type="hidden" name="subtotals[]" class="subtotal-input" value="${price.toFixed(2)}">
@@ -179,19 +184,28 @@ document.addEventListener('DOMContentLoaded', function() {
             updateGrandTotal();
         }
     });
-    
-    orderItemsTbody.addEventListener('input', function(e) {
-        if (e.target.classList.contains('quantity-input')) {
-            const row = e.target.closest('tr');
-            if(parseInt(e.target.value) < 1) e.target.value = 1;
-            updateRowSubtotal(row);
-            updateGrandTotal();
-        }
-    });
 
     orderItemsTbody.addEventListener('click', function(e) {
-        if (e.target.closest('.remove-item-btn')) {
-            e.target.closest('tr').remove();
+        const target = e.target;
+        
+        if (target.classList.contains('increase-qty')) {
+            const input = target.parentElement.querySelector('.quantity-input');
+            input.value = parseInt(input.value) + 1;
+            updateRowSubtotal(target.closest('tr'));
+            updateGrandTotal();
+        }
+
+        if (target.classList.contains('decrease-qty')) {
+            const input = target.parentElement.querySelector('.quantity-input');
+            if (parseInt(input.value) > 1) {
+                input.value = parseInt(input.value) - 1;
+                updateRowSubtotal(target.closest('tr'));
+                updateGrandTotal();
+            }
+        }
+        
+        if (target.closest('.remove-item-btn')) {
+            target.closest('tr').remove();
             updateGrandTotal();
             if (orderItemsTbody.querySelectorAll('tr[data-id]').length === 0 && emptyCartMessage) {
                 emptyCartMessage.style.display = 'table-row';
@@ -235,7 +249,6 @@ document.addEventListener('DOMContentLoaded', function() {
         grandTotalInput.value = grandTotal.toFixed(2);
         cartCount.textContent = itemCount;
 
-        // Update Bottom Bar
         bottomBarCartCount.textContent = itemCount;
         bottomBarTotal.textContent = '₹' + grandTotal.toFixed(2);
     }
