@@ -882,3 +882,16 @@ p {
         opacity: 0;
     }
 }
+
+/* Increase size of quantity buttons */
+.input-group .decrease-qty,
+.input-group .increase-qty {
+    width: 45px;
+    height: 45px;
+    font-size: 1.5rem;
+    padding: 0;
+}
+
+.input-group .quantity-input {
+    height: 45px;
+}

@@ -168,10 +168,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 newRow.innerHTML = `
                     <td><strong>${name}</strong><input type="hidden" name="items[]" value="${id}"></td>
                     <td>
-                        <div class="input-group" style="width: 130px;">
-                            <button class="btn btn-danger decrease-qty" type="button">-</button>
+                        <div class="input-group" style="width: 150px;">
+                            <button class="btn btn-outline-danger decrease-qty" type="button">-</button>
                             <input type="text" name="quantities[]" class="form-control quantity-input text-center" value="1" min="1" readonly>
-                            <button class="btn btn-success increase-qty" type="button">+</button>
+                            <button class="btn btn-outline-success increase-qty" type="button">+</button>
                         </div>
                     </td>
                     <td class="price">₹${price.toFixed(2)}</td>
