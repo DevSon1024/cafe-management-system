@@ -23,17 +23,17 @@ $settings = $settingsModel->findAllAsArray();
         <p>Receipt / Bill</p>
     </div>
     <div class="card-body">
-        <p><strong>Order ID:</strong> <?= $order['id'] ?></p>
+        <p><strong>Bill No.:</strong> <?= $order['id'] ?></p>
         <p><strong>Table:</strong> <?= $order['order_type'] === 'take_away' ? 'Take Away' : esc($order['table_name']) ?></p>
         <p><strong>Date:</strong> <?= date('d M Y, H:i:s', strtotime($order['created_at'])) ?></p>
         <hr>
         <table class="table">
             <thead>
                 <tr>
-                    <th>Item</th>
+                    <th>Item Name</th>
                     <th>Quantity</th>
-                    <th>Price</th>
-                    <th>Subtotal</th>
+                    <th>Rate</th>
+                    <th>Amount</th>
                 </tr>
             </thead>
             <tbody>

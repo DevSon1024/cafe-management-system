@@ -7,7 +7,7 @@
 <table class="table table-bordered">
     <thead>
         <tr>
-            <th>Order ID</th>
+            <th>Bill No.</th>
             <th>Table</th>
             <th>Total Amount</th>
             <th>Status</th>

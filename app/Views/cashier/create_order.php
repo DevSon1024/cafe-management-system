@@ -100,10 +100,10 @@
                             <table class="table table-hover mb-0">
                                 <thead class="table-light">
                                     <tr>
-                                        <th>Item</th>
+                                        <th>Item Name</th>
                                         <th>Quantity</th>
-                                        <th>Price</th>
-                                        <th>Subtotal</th>
+                                        <th>Rate</th>
+                                        <th>Amount</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>

@@ -7,6 +7,7 @@ use CodeIgniter\Router\RouteCollection;
  */
 $routes->get('/', 'Landing::index');
 $routes->get('/about', 'Landing::about');
+$routes->get('/about-project', 'Landing::project_about');
 
 // --- PUBLIC & GUEST ROUTES ---
 // Routes for users who are NOT logged in

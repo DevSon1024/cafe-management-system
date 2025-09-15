@@ -84,10 +84,14 @@
                 </div>
                 <div class="card-body text-center">
                     <p>Click the button below to start your order!</p>
-                    <a href="/order/new" class="btn btn-success btn-lg">Order Now</a>
+                    <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                        <a href="/order/new" class="btn btn-success btn-lg">Order Now</a>
+                        
+                    </div>
                 </div>
             </div>
         </div>
+        <a href="/about-project" class="btn btn-outline-primary btn-lg">About Project</a>
     </div>
 </div>
 
