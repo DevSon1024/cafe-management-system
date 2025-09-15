@@ -39,4 +39,9 @@ class Landing extends BaseController
         $data['settings'] = $settingsModel->findAllAsArray();
         return view('about', $data);
     }
+    
+    public function project_about()
+    {
+        return view('about_project');
+    }
 }
