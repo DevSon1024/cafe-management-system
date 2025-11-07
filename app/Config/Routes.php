@@ -42,7 +42,7 @@ $routes->group('admin', ['filter' => 'admin'], function($routes) {
     $routes->get('orders', 'OrderController::index');
     $routes->get('orders/receipt/(:num)', 'OrderController::receipt/$1');
     $routes->post('orders/complete/(:num)', 'OrderController::complete/$1');
-    $routes->post('orders/update_status/(:num)', 'OrderController::update_status/$1'); // <-- ADD THIS LINE
+    $routes->post('orders/update_status/(:num)', 'OrderController::update_status/$1');
 });
 
 // Routes for placing a new order, accessible by any logged-in user
