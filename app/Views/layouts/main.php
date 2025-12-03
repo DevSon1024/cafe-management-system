@@ -1,203 +1,326 @@
-<?php
-$settingsModel = new \App\Models\SettingsModel();
-$settings = $settingsModel->findAllAsArray();
-$cafeName = esc($settings['cafe_name'] ?? 'The Code Cafe');
-?>
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?= $cafeName ?></title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="/css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title><?= esc($title ?? 'Cafe Management System') ?></title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    
+    <style>
+        /* Custom styles for responsive header */
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        
+        /* Mobile view adjustments */
+        @media (max-width: 768px) {
+            .navbar-brand {
+                font-size: 1.1rem;
+            }
+            
+            .navbar-brand .cafe-full-name {
+                display: none;
+            }
+            
+            .navbar-brand .cafe-short-name {
+                display: inline;
+            }
+            
+            .profile-dropdown {
+                display: block !important;
+            }
+            
+            .desktop-profile-menu {
+                display: none;
+            }
+        }
+        
+        /* Desktop view */
+        @media (min-width: 769px) {
+            .navbar-brand .cafe-full-name {
+                display: inline;
+            }
+            
+            .navbar-brand .cafe-short-name {
+                display: none;
+            }
+            
+            .mobile-profile-icon {
+                display: none;
+            }
+        }
+        
+        .profile-dropdown {
+            position: relative;
+        }
+        
+        .profile-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .profile-icon:hover {
+            transform: scale(1.05);
+        }
+        
+        .dropdown-menu {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Notification badge */
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #dc3545;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-
-    <div class="position-fixed top-0 end-0 p-3" style="z-index: 1100" id="notification-toast-container">
-        </div>
-
-    <div id="sidebar" class="sidebar-container">
-        <div class="sidebar-header">
-            <h5 class="mb-0 text-white">Menu</h5>
-            <button class="btn btn-dark" id="close-sidebar">&times;</button>
-        </div>
-        <ul class="sidebar-nav">
-            <li><a class="sidebar-link" href="/"><i class="bi bi-house-fill me-2"></i>Home</a></li>
-            <li><a class="sidebar-link" href="/about"><i class="bi bi-info-circle-fill me-2"></i>About</a></li>
-            <?php if (session()->get('isLoggedIn')): ?>
-                <?php if (session()->get('role') === 'admin'): ?>
-                    <li><a class="sidebar-link" href="/admin/dashboard"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
-                    <li><a class="sidebar-link" href="/admin/sales"><i class="bi bi-bar-chart-line-fill me-2"></i>Sales History</a></li>
-                    <li><a class="sidebar-link" href="/admin/menu"><i class="bi bi-journal-album me-2"></i>Menu</a></li>
-                    <li><a class="sidebar-link" href="/admin/categories"><i class="bi bi-tags-fill me-2"></i>Categories</a></li>
-                    <li><a class="sidebar-link" href="/admin/orders"><i class="bi bi-card-checklist me-2"></i>Orders</a></li>
-                    <li><a class="sidebar-link" href="/admin/tables"><i class="bi bi-grid-3x3-gap-fill me-2"></i>Tables</a></li>
-                    <li><a class="sidebar-link" href="/admin/staff"><i class="bi bi-people-fill me-2"></i>Staff</a></li>
-                    <li><a class="sidebar-link" href="/admin/settings"><i class="bi bi-gear-fill me-2"></i>Settings</a></li>
-                <?php elseif (session()->get('role') === 'chef'): ?>
-                    <li><a class="sidebar-link" href="/chef/dashboard"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
-                    <li><a class="sidebar-link" href="/chef/order_history"><i class="bi bi-clock-history me-2"></i>Order History</a></li>
-                <?php elseif (session()->get('role') === 'cashier'): ?>
-                    <li><a class="sidebar-link" href="/cashier/dashboard"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
-                <?php endif; ?>
-            <?php endif; ?>
-        </ul>
-    </div>
-    <div id="sidebar-overlay"></div>
-
-    <header class="main-header">
-        <div class="container-fluid d-flex justify-content-between align-items-center">
-            <button class="btn text-white" id="hamburger-menu">
-                <i class="bi bi-list fs-4"></i>
+    <!-- Responsive Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <div class="container-fluid">
+            <!-- Cafe Name/Logo -->
+            <a class="navbar-brand" href="<?= base_url() ?>">
+                <i class="bi bi-cup-hot-fill me-2"></i>
+                <span class="cafe-full-name">Code Cafe</span>
+                <span class="cafe-short-name">Code Cafe</span>
+            </a>
+            
+            <!-- Mobile Toggle Button -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
             </button>
-            <a class="navbar-brand" href="/">☕ <?= $cafeName ?></a>
-
-            <div class="d-flex align-items-center">
-                <?php if (session()->get('isLoggedIn')): ?>
-                    <div class="dropdown me-2" id="notification-bell">
-                        <a class="nav-link dropdown-toggle text-white" href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-bell-fill fs-5"></i>
-                            <span class="badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle" id="notification-count" style="display: none; font-size: 0.6em; padding: .25em .5em;"></span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown" id="notification-list" style="width: 300px;">
+            
+            <!-- Navbar Content -->
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <!-- Navigation Links -->
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <?php if(session()->get('isLoggedIn')): ?>
+                        <?php 
+                        $role = session()->get('role');
+                        $user_name = session()->get('name');
+                        $user_email = session()->get('email');
+                        $user_initials = strtoupper(substr($user_name, 0, 1));
+                        ?>
+                        
+                        <!-- Admin Menu -->
+                        <?php if($role === 'admin'): ?>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?= base_url('admin/dashboard') ?>">
+                                    <i class="bi bi-speedometer2"></i> Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?= base_url('admin/orders') ?>">
+                                    <i class="bi bi-receipt"></i> Orders
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?= base_url('admin/sales') ?>">
+                                    <i class="bi bi-graph-up"></i> Sales
+                                </a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                    <i class="bi bi-gear"></i> Manage
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="<?= base_url('admin/menu') ?>">Menu Items</a></li>
+                                    <li><a class="dropdown-item" href="<?= base_url('admin/categories') ?>">Categories</a></li>
+                                    <li><a class="dropdown-item" href="<?= base_url('admin/staff') ?>">Staff</a></li>
+                                    <li><a class="dropdown-item" href="<?= base_url('admin/tables') ?>">Tables</a></li>
+                                </ul>
+                            </li>
+                        <?php endif; ?>
+                        
+                        <!-- Cashier Menu -->
+                        <?php if($role === 'cashier'): ?>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?= base_url('cashier/dashboard') ?>">
+                                    <i class="bi bi-speedometer2"></i> Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?= base_url('cashier/orders/new') ?>">
+                                    <i class="bi bi-plus-circle"></i> New Order
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?= base_url('cashier/sales') ?>">
+                                    <i class="bi bi-graph-up"></i> Sales
+                                </a>
+                            </li>
+                        <?php endif; ?>
+                        
+                        <!-- Chef Menu -->
+                        <?php if($role === 'chef'): ?>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?= base_url('chef/dashboard') ?>">
+                                    <i class="bi bi-speedometer2"></i> Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?= base_url('chef/order_history') ?>">
+                                    <i class="bi bi-clock-history"></i> Order History
+                                </a>
+                            </li>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                </ul>
+                
+                <!-- Right Side Menu (Profile & Notifications) -->
+                <ul class="navbar-nav ms-auto">
+                    <?php if(session()->get('isLoggedIn')): ?>
+                        <!-- Notifications -->
+                        <li class="nav-item dropdown me-3">
+                            <a class="nav-link position-relative" href="#" role="button" data-bs-toggle="dropdown" id="notificationDropdown">
+                                <i class="bi bi-bell fs-5"></i>
+                                <span class="notification-badge" id="notificationCount" style="display: none;">0</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown" style="min-width: 300px;">
+                                <li class="dropdown-header">Notifications</li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li id="notificationList">
+                                    <div class="px-3 py-2 text-muted text-center">
+                                        <small>No new notifications</small>
+                                    </div>
+                                </li>
                             </ul>
-                    </div>
-
-                    <div class="dropdown">
-                        <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-person-circle fs-4 me-1"></i>
-                            <?= session()->get('name') ?>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="/admin/profile"><i class="bi bi-person-fill me-2"></i>Profile</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="/logout"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
-                        </ul>
-                    </div>
-                <?php else: ?>
-                    <a class="nav-link text-white" href="/login">Login</a>
-                <?php endif; ?>
+                        </li>
+                        
+                        <!-- Profile Dropdown (Desktop & Mobile) -->
+                        <li class="nav-item dropdown profile-dropdown">
+                            <a class="nav-link d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <div class="profile-icon">
+                                    <?= $user_initials ?>
+                                </div>
+                                <span class="ms-2 d-none d-lg-inline"><?= esc($user_name) ?></span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li class="dropdown-header">
+                                    <div class="d-flex align-items-center">
+                                        <div class="profile-icon me-2">
+                                            <?= $user_initials ?>
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold"><?= esc($user_name) ?></div>
+                                            <small class="text-muted"><?= esc($user_email) ?></small>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item" href="<?= base_url($role . '/profile') ?>">
+                                        <i class="bi bi-person"></i> Profile
+                                    </a>
+                                </li>
+                                <?php if($role === 'admin'): ?>
+                                <li>
+                                    <a class="dropdown-item" href="<?= base_url('admin/settings') ?>">
+                                        <i class="bi bi-gear"></i> Settings
+                                    </a>
+                                </li>
+                                <?php endif; ?>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item text-danger" href="<?= base_url('logout') ?>">
+                                        <i class="bi bi-box-arrow-right"></i> Logout
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    <?php else: ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?= base_url('login') ?>">
+                                <i class="bi bi-box-arrow-in-right"></i> Login
+                            </a>
+                        </li>
+                    <?php endif; ?>
+                </ul>
             </div>
         </div>
-    </header>
-
-    <main class="container mt-4 main-content">
+    </nav>
+    
+    <!-- Main Content -->
+    <div class="container-fluid mt-4">
         <?= $this->renderSection('content') ?>
-    </main>
-
-    <footer class="text-center mt-5 py-3 bg-light">
-        <p>&copy; <?= date('Y') ?> <?= $cafeName ?>. All Rights Reserved.</p>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="bg-dark text-white mt-5 py-4">
+        <div class="container text-center">
+            <p class="mb-0">&copy; <?= date('Y') ?> Cafe Management System. All rights reserved.</p>
+        </div>
     </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Notification Script -->
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const hamburger = document.getElementById('hamburger-menu');
-        const closeBtn = document.getElementById('close-sidebar');
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('sidebar-overlay');
-
-        function openSidebar() {
-            if (sidebar) sidebar.classList.add('active');
-            if (overlay) overlay.classList.add('active');
+        // Load notifications
+        function loadNotifications() {
+            fetch('<?= base_url('notifications/unread') ?>')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.notifications && data.notifications.length > 0) {
+                        document.getElementById('notificationCount').style.display = 'flex';
+                        document.getElementById('notificationCount').textContent = data.notifications.length;
+                        
+                        let notificationHTML = '';
+                        data.notifications.forEach(notification => {
+                            notificationHTML += `
+                                <li>
+                                    <a class="dropdown-item" href="#">
+                                        <div class="d-flex">
+                                            <div class="flex-grow-1">
+                                                <small class="text-muted">${notification.created_at}</small>
+                                                <p class="mb-0">${notification.message}</p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                            `;
+                        });
+                        document.getElementById('notificationList').innerHTML = notificationHTML;
+                    }
+                })
+                .catch(error => console.error('Error loading notifications:', error));
         }
-
-        function closeSidebar() {
-            if (sidebar) sidebar.classList.remove('active');
-            if (overlay) overlay.classList.remove('active');
-        }
-
-        if (hamburger) hamburger.addEventListener('click', openSidebar);
-        if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
-        if (overlay) overlay.addEventListener('click', closeSidebar);
-    });
-
-    // --- MODIFIED Notification Script ---
-    <?php if (session()->get('isLoggedIn')): ?>
-    const userRole = '<?= session()->get('role') ?>';
-
-    function createNotificationToast(notification) {
-        const toastContainer = document.getElementById('notification-toast-container');
-        const messageWithoutHtml = notification.message.replace(/<[^>]*>?/gm, ' ');
-
-        // Define the correct redirect URL based on the user's role
-        let viewUrl = '#';
-        if (userRole === 'admin') {
-            viewUrl = `/admin/orders`;
-        } else if (userRole === 'chef') {
-            viewUrl = `/chef/dashboard`;
-        }
-
-        const toastHTML = `
-            <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-                <div class="toast-header">
-                    <strong class="me-auto"><i class="bi bi-bell-fill me-2"></i>New Order Received</strong>
-                    <small>Just now</small>
-                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                </div>
-                <div class="toast-body">
-                    ${messageWithoutHtml}
-                    <div class="mt-2 pt-2 border-top">
-                        <a href="${viewUrl}" class="btn btn-primary btn-sm">View</a>
-                    </div>
-                </div>
-            </div>
-        `;
-
-        toastContainer.insertAdjacentHTML('beforeend', toastHTML);
-        const newToastEl = toastContainer.lastElementChild;
-        const newToast = new bootstrap.Toast(newToastEl, { autohide: true, delay: 20000 }); // Autohide after 20 seconds
-        newToast.show();
-    }
-
-    function fetchNotifications() {
-        fetch('/notifications/unread')
-            .then(response => response.json())
-            .then(data => {
-                if (data.length > 0) {
-                    // Update bell count
-                    const notificationCount = document.getElementById('notification-count');
-                    notificationCount.textContent = data.length;
-                    notificationCount.style.display = 'inline-block';
-
-                    // Create a toast for each new notification
-                    data.forEach(notification => {
-                        createNotificationToast(notification);
-                    });
-
-                    // Mark as read after showing them
-                    markNotificationsAsRead();
-                }
-            });
-    }
-
-    function markNotificationsAsRead() {
-        fetch('/notifications/mark-as-read', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest',
-                '<?= csrf_header() ?>': '<?= csrf_hash() ?>'
-            }
-        }).then(() => {
-            // After marking as read, we can hide the bell count after a delay
-             setTimeout(() => {
-                document.getElementById('notification-count').style.display = 'none';
-            }, 5000); // Hide after 5 seconds
+        
+        // Load notifications on page load
+        <?php if(session()->get('isLoggedIn')): ?>
+        document.addEventListener('DOMContentLoaded', function() {
+            loadNotifications();
+            // Refresh notifications every 30 seconds
+            setInterval(loadNotifications, 30000);
         });
-    }
-
-    // Fetch notifications every 5 seconds for a more responsive feel
-    setInterval(fetchNotifications, 5000);
-
-    // Initial fetch on page load
-    fetchNotifications();
-    <?php endif; ?>
+        <?php endif; ?>
     </script>
-    <?= $this->renderSection('scripts') ?>
 </body>
 </html>

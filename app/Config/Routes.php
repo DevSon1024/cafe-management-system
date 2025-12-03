@@ -61,7 +61,7 @@ $routes->get('order/receipt/(:num)', 'OrderController::receipt/$1');
 // --- CHEF ROUTES ---
 $routes->group('chef', ['filter' => 'chef'], function($routes) {
     $routes->get('dashboard', 'ChefController::index');
-    $routes->get('order_history', 'ChefController::order_history'); // <-- ADD THIS LINE
+    $routes->get('order_history', 'ChefController::order_history');
     $routes->post('order/update_status/(:num)', 'ChefController::update_status/$1');
 });
 
