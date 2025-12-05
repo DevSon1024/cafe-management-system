@@ -6,7 +6,7 @@
     <div class="card mb-4">
         <div class="card-body">
             <h5 class="card-title">Filter by Date</h5>
-            <form action="/admin/sales" method="get">
+            <form action="<?= current_url() ?>" method="get">
                 <div class="row">
                     <div class="col-md-5">
                         <label for="start_date" class="form-label">Start Date</label>

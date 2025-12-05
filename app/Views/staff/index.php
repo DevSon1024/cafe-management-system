@@ -15,7 +15,7 @@
             <th>Actions</th>
         </tr>
     </thead>
-    <tbody>
+        <tbody>
         <?php foreach($staff as $member): ?>
         <tr>
             <td><?= $member['id'] ?></td>

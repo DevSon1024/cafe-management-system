@@ -15,17 +15,24 @@ class UserController extends BaseController
         return view('auth/login');
     }
 
+    // In app/Controllers/UserController.php
     public function authenticate()
     {
         $session = session();
         $model = new UserModel();
         $email = $this->request->getVar('email');
         $password = $this->request->getVar('password');
-        
+
         $user = $model->where('email', $email)->first();
 
         if (is_null($user)) {
             return redirect()->back()->withInput()->with('error', 'Invalid email or password.');
+        }
+
+        // UPDATED ROLE CHECK
+        $allowed_roles = ['admin', 'chef', 'cashier'];
+        if (!in_array($user['role'], $allowed_roles)) {
+            return redirect()->back()->withInput()->with('error', 'Access denied.');
         }
 
         if (!password_verify($password, $user['password'])) {
@@ -41,80 +48,21 @@ class UserController extends BaseController
         ];
         $session->set($ses_data);
 
+        // CORRECTED REDIRECT LOGIC
         if ($user['role'] === 'admin') {
-            return redirect()->to('/admin/dashboard'); // Corrected redirect
-        }
-        
-        return redirect()->to('/user/dashboard');
-    }
-    public function register()
-    {
-        return view('auth/register');
-    }
-
-    public function orders()
-    {
-        $orderModel = new OrderModel();
-        $userId = session()->get('user_id');
-
-        $data['orders'] = $orderModel->getOrdersByUserId($userId);
-
-        // Logic for the time-sensitive message
-        $hour = date('H');
-        if ($hour < 12) {
-            $data['greeting_message'] = "Start your tasty day with our delicious breakfast!";
-        } elseif ($hour < 17) {
-            $data['greeting_message'] = "Feeling hungry? Our lunch menu has just what you need!";
-        } else {
-            $data['greeting_message'] = "End your day on a high note with a wonderful dinner.";
+            return redirect()->to('/admin/dashboard');
+        } elseif ($user['role'] === 'chef') {
+            return redirect()->to('/chef/dashboard');
+        } elseif ($user['role'] === 'cashier') {
+            return redirect()->to('/cashier/dashboard');
         }
 
-        return view('user/orders', $data);
-    }
-
-    public function store()
-    {
-        $model = new UserModel();
-
-        // Validation Rules
-        $rules = [
-            'name'             => 'required|min_length[3]|max_length[255]',
-            'email'            => 'required|valid_email|is_unique[users.email]',
-            'password'         => 'required|min_length[8]',
-            'password_confirm' => 'matches[password]',
-        ];
-
-        if (! $this->validate($rules)) {
-            // Pass validation errors to the view
-            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
-        }
-
-        // If validation passes, save the user
-        $data = [
-            'name'     => $this->request->getVar('name'),
-            'email'    => $this->request->getVar('email'),
-            'password' => password_hash($this->request->getVar('password'), PASSWORD_DEFAULT),
-            'role'     => 'user'
-        ];
-
-        if ($model->save($data)) {
-            return redirect()->to('/login')->with('success', 'Registration successful. Please login.');
-        } else {
-            return redirect()->back()->withInput()->with('error', 'Registration failed. Please try again.');
-        }
+        return redirect()->to('/login');
     }
 
     public function logout()
     {
         session()->destroy();
         return redirect()->to('/login');
-    }
-
-    // Example of a user-specific dashboard
-    public function dashboard()
-    {
-        // This is a protected area for logged-in users
-        // You would load user-specific data here
-        return view('user/dashboard');
     }
 }

@@ -10,8 +10,9 @@
     </div>
     <div class="mb-3">
         <label for="role" class="form-label">Role</label>
-        <select name="role" class="form-select" required>
+        <select name="role" id="role" class="form-select" required>
             <option value="Admin" <?= $staff_member['role'] == 'Admin' ? 'selected' : '' ?>>Admin</option>
+            <option value="Chef" <?= $staff_member['role'] == 'Chef' ? 'selected' : '' ?>>Chef</option>
             <option value="Cashier" <?= $staff_member['role'] == 'Cashier' ? 'selected' : '' ?>>Cashier</option>
             <option value="Waiter" <?= $staff_member['role'] == 'Waiter' ? 'selected' : '' ?>>Waiter</option>
         </select>
@@ -24,6 +25,29 @@
             <option value="Night" <?= $staff_member['shift'] == 'Night' ? 'selected' : '' ?>>Night</option>
         </select>
     </div>
+
+    <div id="credentials" style="<?= $staff_member['role'] !== 'Waiter' ? 'display:block;' : 'display:none;' ?>">
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" name="email" value="<?= $user ? esc($user['email']) : '' ?>">
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">New Password (leave blank to keep current)</label>
+            <input type="password" class="form-control" name="password">
+        </div>
+    </div>
+
     <button type="submit" class="btn btn-primary">Update</button>
 </form>
+
+<script>
+    document.getElementById('role').addEventListener('change', function() {
+        var credentialsDiv = document.getElementById('credentials');
+        if (this.value === 'Waiter') {
+            credentialsDiv.style.display = 'none';
+        } else {
+            credentialsDiv.style.display = 'block';
+        }
+    });
+</script>
 <?= $this->endSection() ?>

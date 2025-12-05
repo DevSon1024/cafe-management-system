@@ -1,51 +1,39 @@
+<?php
+$settingsModel = new \App\Models\SettingsModel();
+$settings = $settingsModel->findAllAsArray();
+?>
 <?= $this->extend('layouts/main') ?>
 <?= $this->section('content') ?>
 
 <style>
     /* These styles only apply when printing */
     @media print {
-        /* Hide everything that's not the receipt */
-        body * {
-            visibility: hidden;
-        }
-
-        /* Make the receipt card and its contents visible */
-        .receipt-card, .receipt-card * {
-            visibility: visible;
-        }
-
-        /* Position the receipt at the top of the page */
-        .receipt-card {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-        }
-        
-        /* Hide the action buttons and the debug toolbar */
-        .no-print, #debug-icon {
-            display: none;
-        }
+        body * { visibility: hidden; }
+        .receipt-card, .receipt-card * { visibility: visible; }
+        .receipt-card { position: absolute; left: 0; top: 0; width: 100%; }
+        .no-print, #debug-icon { display: none; }
     }
 </style>
 
 <div class="card receipt-card">
     <div class="card-header text-center">
-        <h3>The Code Cafe</h3>
+        <h3><?= esc($settings['cafe_name'] ?? 'The Code Cafe') ?></h3>
+        <p><?= esc($settings['address'] ?? '123 CodeIgniter Avenue, Webville, PHP 74000') ?></p>
+        <p>GST: <?= esc($settings['gst_number'] ?? 'N/A') ?> | Phone: <?= esc($settings['phone'] ?? '+91 12345 67890') ?> | Email: <?= esc($settings['email'] ?? 'contact@thecodecafe.com') ?></p>
         <p>Receipt / Bill</p>
     </div>
     <div class="card-body">
-        <p><strong>Order ID:</strong> <?= $order['id'] ?></p>
-        <p><strong>Table:</strong> <?= esc($order['table_name']) ?></p>
+        <p><strong>Bill No.:</strong> <?= $order['id'] ?></p>
+        <p><strong>Table:</strong> <?= $order['order_type'] === 'take_away' ? 'Take Away' : esc($order['table_name']) ?></p>
         <p><strong>Date:</strong> <?= date('d M Y, H:i:s', strtotime($order['created_at'])) ?></p>
         <hr>
         <table class="table">
             <thead>
                 <tr>
-                    <th>Item</th>
+                    <th>Item Name</th>
                     <th>Quantity</th>
-                    <th>Price</th>
-                    <th>Subtotal</th>
+                    <th>Rate</th>
+                    <th>Amount</th>
                 </tr>
             </thead>
             <tbody>
@@ -60,7 +48,7 @@
                 <?php $sub_total += $item['subtotal']; ?>
                 <?php endforeach; ?>
             </tbody>
-            <tfoot>
+           <tfoot>
                 <tr>
                     <th colspan="3" class="text-end">Sub-Total:</th>
                     <th>₹<?= number_format($sub_total, 2) ?></th>
@@ -82,9 +70,10 @@
 
 <div class="text-center mt-3 no-print">
     <?php
-    $back_url = (session()->get('role') === 'admin') ? '/admin/orders' : '/user/orders';
+    // Use the back_url provided by the controller, or a default fallback
+    $redirect_url = $back_url ?? (session()->get('role') === 'admin' ? '/admin/orders' : '/');
     ?>
-    <a href="<?= $back_url ?>" class="btn btn-secondary">Back to Orders</a>
+    <a href="<?= $redirect_url ?>" class="btn btn-secondary">Back</a>
     <button onclick="window.print()" class="btn btn-primary">Print Receipt</button>
 </div>
 
